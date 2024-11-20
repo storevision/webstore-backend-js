@@ -10,7 +10,9 @@
       <user-name>storevision</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node kind="database" qname="storevision" />
+          <node kind="database" qname="storevision">
+            <node kind="schema" qname="public" />
+          </node>
         </introspection-scope>
       </schema-mapping>
     </data-source>

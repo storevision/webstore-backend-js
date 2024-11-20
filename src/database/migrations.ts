@@ -13,7 +13,7 @@ async function executeMigration(migration: Migration): Promise<void> {
 
     const query = fs.readFileSync(`./sql/${migration.file}`, 'utf-8');
 
-    console.log('Executing migration:', migration, query);
+    console.log('Executing migration:', migration.file);
 
     try {
         await client.query('BEGIN');
@@ -73,7 +73,7 @@ export async function getCurrentDatabaseVersion(): Promise<number> {
 export default async function applyMigrations(): Promise<void> {
     const migrations = await findMigrations();
 
-    console.log('Found migrations:', migrations);
+    console.log('Found migrations:', migrations.length);
 
     const version = await getCurrentDatabaseVersion();
 

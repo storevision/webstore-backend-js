@@ -1,5 +1,5 @@
-import applyMigrations from './migrations';
-import { setupClient } from './pg';
+import { setupClient } from '@/database/db';
+import applyMigrations from '@/database/migrations';
 
 async function initDatabaseConnection(): Promise<void> {
     const {

@@ -1,14 +1,15 @@
-import { Client } from 'pg';
+import type { PoolClient } from 'pg';
+import { Pool } from 'pg';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
-let _client: Client | null = null;
+let _pool: Pool | null = null;
 
-const getClient = (): Client => {
-    if (!_client) {
+const getClient = async (): Promise<PoolClient> => {
+    if (!_pool) {
         throw new Error('Database not initialized');
     }
 
-    return _client;
+    return _pool.connect();
 };
 
 export interface SetupClientArgs {
@@ -20,10 +21,17 @@ export interface SetupClientArgs {
 }
 
 export async function setupClient(clientArgs: SetupClientArgs): Promise<void> {
-    _client = new Client(clientArgs);
+    _pool = new Pool(clientArgs);
 
     try {
-        await _client.connect();
+        // check if the connection is successful
+        const client = await _pool.connect();
+
+        const response = await client.query('SELECT NOW()');
+
+        console.log('Database connection established:', response.rows[0].now);
+
+        client.release();
 
         console.log('Database connection established');
     } catch (error) {

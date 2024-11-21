@@ -17,7 +17,7 @@
     "import",
     "simple-import-sort"
   ],
-  "ignorePatterns": ["node_modules/", "dist", "src/generated"],
+  "ignorePatterns": ["node_modules/", "dist", "src/generated", "src/schemas"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -65,7 +65,9 @@
     ],
     "no-relative-import-paths/no-relative-import-paths": [
       "warn",
-      { "allowSameFolder": true, "rootDir": "src" }
+      { "allowSameFolder": false, "rootDir": "src", "allowedDepth": 1,
+        "prefix": "@"
+      }
     ],
     "@typescript-eslint/consistent-type-imports": [
       "error",

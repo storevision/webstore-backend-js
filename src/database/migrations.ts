@@ -1,7 +1,7 @@
 import fs from 'fs';
 import type { DatabaseError } from 'pg';
 
-import getClient from './pg';
+import getClient from '@/database/db';
 
 export interface Migration {
     version: number;
@@ -9,7 +9,7 @@ export interface Migration {
 }
 
 async function executeMigration(migration: Migration): Promise<void> {
-    const client = getClient();
+    const client = await getClient();
 
     const query = fs.readFileSync(`./sql/${migration.file}`, 'utf-8');
 
@@ -27,7 +27,7 @@ async function executeMigration(migration: Migration): Promise<void> {
 
         await client.query('COMMIT');
 
-        console.log('Migration applied:', migration);
+        console.log('Migration applied:', migration.file);
     } catch (error) {
         await client.query('ROLLBACK');
 
@@ -49,7 +49,7 @@ async function findMigrations(): Promise<Migration[]> {
 }
 
 export async function getCurrentDatabaseVersion(): Promise<number> {
-    const client = getClient();
+    const client = await getClient();
 
     try {
         const query = 'SELECT value FROM metadata WHERE key = $1';

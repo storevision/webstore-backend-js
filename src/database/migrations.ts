@@ -62,6 +62,7 @@ export async function getCurrentDatabaseVersion(): Promise<number> {
 
         return parseInt(rows[0].value, 10);
     } catch (error) {
+        // if the metadata table does not exist, return -1
         if ((error as DatabaseError).code === '42P01') {
             return -1;
         }

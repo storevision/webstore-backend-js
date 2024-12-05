@@ -50,15 +50,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '22.x'
-        cache: 'yarn'
-        cache-dependency-path: 'yarn.lock'
-
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile --non-interactive
-
     - name: Verify docker is installed
       id: docker-version
       continue-on-error: true

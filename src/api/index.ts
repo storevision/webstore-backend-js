@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/assets', express.static('assets'));
+app.get('/healthz', (_req, res) => {
+    res.sendStatus(200);
+});
 
 app.use(morgan('dev'));
 

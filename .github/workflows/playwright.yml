@@ -52,7 +52,7 @@ jobs:
     - name: Wait until webserver is ready
       timeout-minutes: 5
       run: |
-          while ! curl -s http://localhost:1337; do
+          while ! curl -s http://localhost:1337/healthz; do
               sleep 1
           done
 

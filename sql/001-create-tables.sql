@@ -24,3 +24,25 @@ CREATE TABLE inventory
     quantity   INTEGER NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
+
+CREATE TABLE users
+(
+    id                  SERIAL PRIMARY KEY,
+    email               TEXT      NOT NULL UNIQUE,
+    display_name        TEXT      NOT NULL,
+    password_hash       TEXT      NOT NULL,
+    password_changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE FUNCTION set_password_changed_at()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql AS
+$$BEGIN
+    NEW.password_changed_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;$$;
+
+CREATE TRIGGER set_password_changed_at
+    BEFORE UPDATE OF password_hash ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION set_password_changed_at();

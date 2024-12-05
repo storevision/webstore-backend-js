@@ -3,7 +3,6 @@
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="storevision@localhost" uuid="b4872c62-27b6-4583-9a15-eba5d05d15d8">
       <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
       <schema-control>AUTOMATIC</schema-control>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/storevision</jdbc-url>

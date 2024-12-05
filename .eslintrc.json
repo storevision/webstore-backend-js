@@ -79,6 +79,7 @@
     ],
     "simple-import-sort/imports": ["error", {
       "groups": [
+        ["@/env"],
         ["^\\w"],
         ["^@/utils"],
         ["^@/"],

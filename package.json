@@ -2,22 +2,35 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
     "dev:reset": "docker compose down && rm -rf pgdata && docker compose up -d",
-    "start": "node dist/index.js",
-    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "build": "tsc --build --clean && tspc --build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
     "codegen": "kanel",
     "prestart": "yarn fetch-specs"
   },
   "dependencies": {
     "@types/express": "^5.0.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "pg": "^8.13.1",
+    "ts-patch": "^3.3.0",
     "typescript": "^5 <5.6.0"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^8.2.3",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
     "@types/pg": "^8.11.10",
     "@typescript-eslint/eslint-plugin": "^7.18.1-alpha.3",
     "@typescript-eslint/parser": "^7.18.1-alpha.3",
@@ -35,7 +48,8 @@
     "kanel": "^3.10.3",
     "prettier": "^3.3.3",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "typescript-transform-paths": "^3.5.2"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -14,6 +14,8 @@ export default interface Products {
 
   description: string;
 
+  image_url: string;
+
   price_per_unit: string;
 
   category_id: CategoriesId | null;
@@ -28,6 +30,8 @@ export interface ProductsInitializer {
 
   description: string;
 
+  image_url: string;
+
   price_per_unit: string;
 
   category_id?: CategoriesId | null;
@@ -40,6 +44,8 @@ export interface ProductsMutator {
   name?: string;
 
   description?: string;
+
+  image_url?: string;
 
   price_per_unit?: string;
 

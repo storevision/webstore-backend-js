@@ -1,9 +1,7 @@
-import { configDotenv } from 'dotenv';
+import '@/env';
 
 import app from '@/api';
 import initDatabase from '@/database';
-
-configDotenv({ path: './backend.env' });
 
 export async function init(): Promise<void> {
     const portStr = process.env.PORT || '1337';

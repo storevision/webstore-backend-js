@@ -19,6 +19,8 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 
+COPY tsconfig.json package.json yarn.lock ./
+
 COPY src ./src
 
 ENV NODE_ENV=production
@@ -31,4 +33,4 @@ USER nodejs
 
 EXPOSE 3000
 
-CMD ["ts-node", "src/index.ts"]
+CMD ["yarn", "start"]

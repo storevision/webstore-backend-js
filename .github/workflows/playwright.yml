@@ -62,7 +62,7 @@ jobs:
     - name: Get container logs if failed
       if: steps.wait.outcome == 'failure'
       run: |
-        docker logs ci
+        docker-compose -f docker-compose.yml logs
         exit 1
 
     - name: Run Playwright tests from commanderred42/webstore-playwright

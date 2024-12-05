@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit",
-    "codegen": "kanel",
-    "prestart": "yarn fetch-specs"
+    "codegen": "kanel"
   },
   "dependencies": {
     "@types/express": "^5.0.0",

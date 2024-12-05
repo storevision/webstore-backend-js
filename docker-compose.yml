@@ -19,6 +19,7 @@ services:
     env_file: "backend.env"
     environment:
       POSTGRES_HOST: db
+      CI: true
     networks:
       - backend
 
@@ -26,7 +27,8 @@ services:
     volumes:
       - ./playwright-report:/playwright-report
     environment:
-      - API_BASE_URL=http://ci:1337
+      API_BASE_URL: http://ci:1337
+      CI: true
     image: commanderred42/webstore-playwright
     networks:
       - backend

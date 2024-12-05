@@ -46,8 +46,20 @@ jobs:
           sudo service docker start
           sudo docker ps
 
-    - name: Start service db and ci
-      run: docker compose -f docker-compose.yml up -d db ci
+    - name: Start service db
+      run: docker compose -f docker-compose.yml up -d db
+
+    - name: Wait for postgres container to be ready
+      timeout-minutes: 1
+      id: wait-postgres
+      continue-on-error: true
+      run: |
+          while ! docker exec webstore_db_1 pg_isready; do
+              sleep 1
+          done
+
+    - name: Start service "ci"
+      run: docker compose -f docker-compose.yml up -d ci
 
     - name: Wait until webserver is ready
       timeout-minutes: 1
@@ -62,7 +74,7 @@ jobs:
     - name: Get container logs if failed
       if: steps.wait.outcome == 'failure'
       run: |
-        docker compose -f docker-compose.yml logs
+        docker compose -f docker-compose.yml logs ci
         exit 1
 
     - name: Run Playwright tests from commanderred42/webstore-playwright

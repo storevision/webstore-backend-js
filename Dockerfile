@@ -23,6 +23,8 @@ COPY tsconfig.json package.json yarn.lock ./
 
 COPY src ./src
 
+COPY sql ./sql
+
 ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs

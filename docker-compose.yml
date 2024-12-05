@@ -17,6 +17,8 @@ services:
       - "1337:1337"
     working_dir: /app
     env_file: "backend.env"
+    environment:
+      POSTGRES_HOST: db
     networks:
       - backend
 

@@ -52,9 +52,10 @@ jobs:
     - name: Wait until webserver is ready
       timeout-minutes: 5
       run: |
-          while ! curl -s http://localhost:1337/healthz; do
-              sleep 1
-          done
+          sudo netstat -tulnp
+          #while ! curl -s http://localhost:1337/healthz; do
+          #    sleep 1
+          #done
 
     - name: Run Playwright tests from commanderred42/webstore-playwright
       run: docker run --rm -v $PWD/playwright-report:/playwright-report --network="host" commanderred42/webstore-playwright

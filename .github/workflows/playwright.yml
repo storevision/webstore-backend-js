@@ -51,12 +51,19 @@ jobs:
 
     - name: Wait until webserver is ready
       timeout-minutes: 1
+      id: wait
+      continue-on-error: true
       run: |
-          sudo netstat -tulnp
+          sudo netstat -tulpn
           curl -s http://localhost:1337/healthz --retry 10 --retry-connrefused --retry-delay 5 --retry-max-time 60 -vvv
           #while ! curl -s http://localhost:1337/healthz; do
           #    sleep 1
           #done
+    - name: Get container logs if failed
+      if: steps.wait.outcome == 'failure'
+      run: |
+        docker logs ci
+        exit 1
 
     - name: Run Playwright tests from commanderred42/webstore-playwright
       run: docker run --rm -v $PWD/playwright-report:/playwright-report --network="host" commanderred42/webstore-playwright

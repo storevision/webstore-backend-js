@@ -24,14 +24,18 @@ services:
       - backend
 
   webstore-playwright:
-    volumes:
-      - ./playwright-report:/playwright-report
+    # volumes:
+    #   - ./playwright-report:/playwright-report
     environment:
       API_BASE_URL: http://ci:1337
       CI: true
     image: commanderred42/webstore-playwright
     networks:
       - backend
+    ipc: host
+    cap_add:
+      - SYS_ADMIN
+    init: true
 
 networks:
   backend:

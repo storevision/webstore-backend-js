@@ -22,10 +22,24 @@ jobs:
       run: yarn install --frozen-lockfile --non-interactive
 
     - name: Verify docker is installed
+      id: docker-version
+      continue-on-error: true
       run: docker --version
 
     - name: Verify docker-compose is installed
-      run: docker-compose --version
+      id: docker-compose-version
+      continue-on-error: true
+      run: docker compose --version
+
+    - name: Install docker / docker-compose
+      if: steps.docker-version.outcome == 'failure' || steps.docker-compose-version.outcome == 'failure'
+      run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+          sudo apt-get update
+          sudo apt-get install docker-ce docker-compose-plugin
 
     - name: Start Docker
       run: |
@@ -33,7 +47,7 @@ jobs:
           sudo docker ps
 
     - name: Start service db and ci
-      run: docker-compose -f docker-compose.yml up -d db ci
+      run: docker compose -f docker-compose.yml up -d db ci
 
     - name: Wait until webserver is ready
       timeout-minutes: 5

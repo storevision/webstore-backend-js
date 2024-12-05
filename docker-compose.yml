@@ -22,6 +22,15 @@ services:
     networks:
       - backend
 
+  webstore-playwright:
+    volumes:
+      - ./playwright-report:/playwright-report
+    environment:
+      - API_BASE_URL=http://ci:1337
+    image: commanderred42/webstore-playwright
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge

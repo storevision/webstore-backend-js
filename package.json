@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
-    "dev:reset": "docker compose down && rm -rf pgdata && docker compose up -d",
+    "dev:reset": "docker compose down db && rm -rf pgdata && docker compose up -d db",
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc --build --clean && tspc --build",
     "test": "echo \"Error: no test specified\" && exit 1",

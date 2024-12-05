@@ -6,6 +6,8 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     env_file: "backend.env"
+    networks:
+      - backend
 
   ci:
     build:
@@ -15,3 +17,9 @@ services:
       - "1337:1337"
     working_dir: /app
     env_file: "backend.env"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

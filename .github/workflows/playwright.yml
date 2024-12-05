@@ -54,7 +54,7 @@ jobs:
       id: wait-postgres
       continue-on-error: true
       run: |
-          while ! docker exec webstore_db_1 pg_isready; do
+          while ! docker exec webstore-backend-js-db-1 pg_isready; do
               sleep 1
           done
 

@@ -24,8 +24,8 @@ services:
       - backend
 
   webstore-playwright:
-    # volumes:
-    #   - ./playwright-report:/playwright-report
+    volumes:
+      - ./playwright-report:/playwright-report
     environment:
       API_BASE_URL: http://ci:1337
       CI: true

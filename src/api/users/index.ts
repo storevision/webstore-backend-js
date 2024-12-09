@@ -63,7 +63,7 @@ usersRouter.post('/login', async (req, res: ExpressResponse<Users>) => {
     if (!user) {
         res.status(401).json({
             success: false,
-            error: 'Invalid credentials',
+            error: 'Invalid email or password.',
         });
         return;
     }

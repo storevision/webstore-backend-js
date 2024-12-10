@@ -34,6 +34,7 @@ export const verifyRequest = async (
         const verified = await verifyUserByObject(user);
 
         if (!verified) {
+            console.log('user not verified');
             res.status(401).json({ success: false, message: 'Unauthorized' });
             return null;
         }
@@ -41,10 +42,12 @@ export const verifyRequest = async (
         return user;
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
+            console.log('token expired');
             res.status(401).json({ success: false, message: 'Token expired' });
             return null;
         }
 
+        console.error('Error verifying token:', error);
         res.status(401).json({ success: false, message: 'Unauthorized' });
     }
 

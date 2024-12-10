@@ -1,5 +1,6 @@
 import { setupClient } from '@/database/db';
 import applyMigrations from '@/database/migrations';
+import { generateBlurredImage } from '@/database/products/generateBlurredImage';
 
 async function initDatabaseConnection(): Promise<void> {
     const {
@@ -51,4 +52,6 @@ export default async function initDatabase(): Promise<void> {
     await initDatabaseConnection();
 
     await applyMigrations();
+
+    generateBlurredImage();
 }

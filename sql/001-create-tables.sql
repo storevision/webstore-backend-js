@@ -8,12 +8,15 @@ CREATE TABLE categories
 
 CREATE TABLE products
 (
-    id             SERIAL PRIMARY KEY,
-    name           TEXT           NOT NULL,
-    description    TEXT           NOT NULL,
-    image_url      TEXT           NOT NULL,
-    price_per_unit DECIMAL(10, 2) NOT NULL,
-    category_id    INTEGER,
+    id                   SERIAL PRIMARY KEY,
+    name                 TEXT           NOT NULL,
+    description          TEXT           NOT NULL,
+    image_url            TEXT           NOT NULL,
+    blurred_image        TEXT,
+    blurred_image_width  INTEGER,
+    blurred_image_height INTEGER,
+    price_per_unit       DECIMAL(10, 2) NOT NULL,
+    category_id          INTEGER,
     FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
@@ -37,12 +40,15 @@ CREATE TABLE users
 CREATE FUNCTION set_password_changed_at()
     RETURNS TRIGGER
     LANGUAGE plpgsql AS
-$$BEGIN
+$$
+BEGIN
     NEW.password_changed_at = CURRENT_TIMESTAMP;
     RETURN NEW;
-END;$$;
+END;
+$$;
 
 CREATE TRIGGER set_password_changed_at
-    BEFORE UPDATE OF password_hash ON users
+    BEFORE UPDATE OF password_hash
+    ON users
     FOR EACH ROW
-    EXECUTE FUNCTION set_password_changed_at();
+EXECUTE FUNCTION set_password_changed_at();

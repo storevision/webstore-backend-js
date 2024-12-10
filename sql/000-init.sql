@@ -6,4 +6,5 @@ CREATE TABLE IF NOT EXISTS metadata
 );
 
 INSERT INTO metadata (key, value)
-VALUES ('db_version', '0') ON CONFLICT (key) DO NOTHING;
+VALUES ('db_version', '0')
+ON CONFLICT (key) DO NOTHING;

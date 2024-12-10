@@ -115,6 +115,11 @@ jobs:
       - name: Run Playwright tests from commanderred42/webstore-playwright
         run: docker compose -f docker-compose.yml run webstore-playwright
 
+      - uses: daun/playwright-report-summary@v3
+        if: ${{ !cancelled() }}
+        with:
+          report-file: results.json
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

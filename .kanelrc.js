@@ -19,5 +19,11 @@ module.exports = {
     customTypeMap: {
         "pg_catalog.tsvector": "string",
         "pg_catalog.bpchar": "string",
+        "pg_catalog.float8": "number",
+        "pg_catalog.float4": "number",
+        "pg_catalog.numeric": "number",
+        "pg_catalog.int8": "number",
+        "pg_catalog.int4": "number",
+        "pg_catalog.int2": "number",
     },
 };

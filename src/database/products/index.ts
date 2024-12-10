@@ -7,7 +7,10 @@ export const listProducts = async (): Promise<Products[]> => {
     try {
         const { rows } = await client.query('SELECT * FROM products');
 
-        return rows;
+        return rows.map(row => ({
+            ...row,
+            price_per_unit: parseFloat(row.price_per_unit),
+        }));
     } finally {
         client.release();
     }

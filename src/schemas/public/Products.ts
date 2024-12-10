@@ -16,7 +16,13 @@ export default interface Products {
 
   image_url: string;
 
-  price_per_unit: string;
+  blurred_image: string | null;
+
+  blurred_image_width: number | null;
+
+  blurred_image_height: number | null;
+
+  price_per_unit: number;
 
   category_id: CategoriesId | null;
 }
@@ -32,7 +38,13 @@ export interface ProductsInitializer {
 
   image_url: string;
 
-  price_per_unit: string;
+  blurred_image?: string | null;
+
+  blurred_image_width?: number | null;
+
+  blurred_image_height?: number | null;
+
+  price_per_unit: number;
 
   category_id?: CategoriesId | null;
 }
@@ -47,7 +59,13 @@ export interface ProductsMutator {
 
   image_url?: string;
 
-  price_per_unit?: string;
+  blurred_image?: string | null;
+
+  blurred_image_width?: number | null;
+
+  blurred_image_height?: number | null;
+
+  price_per_unit?: number;
 
   category_id?: CategoriesId | null;
 }

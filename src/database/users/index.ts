@@ -14,6 +14,7 @@ export interface RegisterUserArgs {
 export class UserAlreadyExistsError extends Error {
     constructor() {
         super('User already exists');
+        this.name = 'UserAlreadyExistsError';
     }
 }
 
@@ -98,15 +99,18 @@ export const verifyUserByObject = async (
 ): Promise<boolean> => {
     const user = tokenCookie;
 
-    const iatDate = new Date(user.iat * 1000);
-
     const userFromDb = await getUserByEmail(user.email);
 
     if (!userFromDb) {
+        console.log('User not found in database');
         return false;
     }
 
-    return (
-        userFromDb.id === user.id && userFromDb.password_changed_at <= iatDate
+    const passwordChangedAt = Math.floor(
+        new Date(userFromDb.password_changed_at).getTime() / 1000,
     );
+
+    const passwordChangedAfterTokenIssued = passwordChangedAt > user.iat;
+
+    return userFromDb.id === user.id && !passwordChangedAfterTokenIssued;
 };

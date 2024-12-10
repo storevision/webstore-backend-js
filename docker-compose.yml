@@ -26,6 +26,7 @@ services:
   webstore-playwright:
     volumes:
       - ./playwright-report:/app/playwright-report
+      - ./results.json:/app/results.json
     environment:
       API_BASE_URL: http://ci:1337
       CI: true

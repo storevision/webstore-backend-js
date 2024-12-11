@@ -112,5 +112,15 @@ export const verifyUserByObject = async (
 
     const passwordChangedAfterTokenIssued = passwordChangedAt > user.iat;
 
+    if (passwordChangedAfterTokenIssued) {
+        console.warn(
+            'Password changed after token issued, time difference:',
+            passwordChangedAt - user.iat,
+            'seconds',
+            Math.floor(userFromDb.password_changed_at.getTime() / 1000),
+            user.iat,
+        );
+    }
+
     return userFromDb.id === user.id && !passwordChangedAfterTokenIssued;
 };

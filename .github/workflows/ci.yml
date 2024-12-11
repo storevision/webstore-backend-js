@@ -139,6 +139,9 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - name: Docker ps
+        run: docker ps -a
+
       - name: Export webserver logs if it failed to start
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
         run: docker logs webstore-backend-js-ci-1 &> webstore-backend-js-ci-1.log

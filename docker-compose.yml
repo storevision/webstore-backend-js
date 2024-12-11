@@ -23,7 +23,7 @@ services:
     networks:
       - backend
 
-  webstore-playwright:
+  playwright:
     volumes:
       - ./playwright-report:/app/playwright-report
       - ./results.json:/app/results.json

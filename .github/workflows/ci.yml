@@ -125,7 +125,7 @@ jobs:
         id: playwright
         continue-on-error: true
         if: steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success'
-        run: docker compose -f docker-compose.yml run webstore-playwright
+        run: docker compose -f docker-compose.yml run playwright
 
       - uses: daun/playwright-report-summary@v3
         if: ${{ !cancelled() && steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success' }}
@@ -145,7 +145,7 @@ jobs:
 
       - name: Export playwright logs if it failed to start
         if: steps.playwright.outcome == 'failure'
-        run: docker logs webstore-playwright &> webstore-playwright.log
+        run: docker logs webstore-backend-js-playwright-1 &> webstore-backend-js-playwright.log
 
       - name: Upload webserver logs if it exists
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
@@ -158,8 +158,8 @@ jobs:
         if: steps.playwright.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          path: webstore-playwright
-          name: webstore-playwright.log
+          path: webstore-backend-js-playwright
+          name: webstore-backend-js-playwright.log
 
       - name: Mark as failed if the webserver failed to start
         if: steps.wait-webserver.outcome == 'failure' || steps.wait-postgres.outcome == 'failure' || steps.playwright.outcome == 'failure'

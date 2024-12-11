@@ -121,18 +121,9 @@ jobs:
               fi
           done
 
-      - name: Export webserver logs if it failed to start
-        if: steps.wait-webserver.outcome == 'failure'
-        run: docker logs webstore-backend-js-ci-1 &> ci.log
-
-      - name: Upload ci.log if it exists
-        if: steps.wait-webserver.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          path: ci.log
-          name: ci.log
-
       - name: Run Playwright tests from commanderred42/webstore-playwright
+        id: playwright
+        continue-on-error: true
         if: steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success'
         run: docker compose -f docker-compose.yml run webstore-playwright
 
@@ -148,8 +139,30 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - name: Export webserver logs if it failed to start
+        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        run: docker logs webstore-backend-js-ci-1 &> webstore-backend-js-ci-1.log
+
+      - name: Export playwright logs if it failed to start
+        if: steps.playwright.outcome == 'failure'
+        run: docker logs webstore-playwright &> webstore-playwright.log
+
+      - name: Upload webserver logs if it exists
+        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          path: webstore-backend-js-ci-1
+          name: webstore-backend-js-ci-1.log
+
+      - name: Upload playwright logs if it exists
+        if: steps.playwright.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          path: webstore-playwright
+          name: webstore-playwright.log
+
       - name: Mark as failed if the webserver failed to start
-        if: steps.wait-webserver.outcome == 'failure' || steps.wait-postgres.outcome == 'failure'
+        if: steps.wait-webserver.outcome == 'failure' || steps.wait-postgres.outcome == 'failure' || steps.playwright.outcome == 'failure'
         run: exit 1
 
   push_to_registry:

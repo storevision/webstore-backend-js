@@ -150,7 +150,7 @@ jobs:
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          path: ci
+          path: ci.log
           name: ci.log
 
       - name: Export playwright logs if it failed to start
@@ -161,7 +161,7 @@ jobs:
         if: steps.playwright.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          path: playwright
+          path: playwright.log
           name: playwright.log
 
       - name: Mark as failed if the webserver failed to start

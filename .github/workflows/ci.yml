@@ -143,16 +143,16 @@ jobs:
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
         run: docker logs webstore-backend-js-ci-1 &> webstore-backend-js-ci-1.log
 
-      - name: Export playwright logs if it failed to start
-        if: steps.playwright.outcome == 'failure'
-        run: docker logs webstore-backend-js-playwright-1 &> webstore-backend-js-playwright.log
-
       - name: Upload webserver logs if it exists
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           path: webstore-backend-js-ci-1
           name: webstore-backend-js-ci-1.log
+
+      - name: Export playwright logs if it failed to start
+        if: steps.playwright.outcome == 'failure'
+        run: docker logs webstore-backend-js-playwright-1 &> webstore-backend-js-playwright.log
 
       - name: Upload playwright logs if it exists
         if: steps.playwright.outcome == 'failure'

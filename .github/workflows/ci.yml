@@ -117,7 +117,7 @@ jobs:
 
       - name: Export webserver logs if it failed to start
         if: steps.wait-webserver.outcome == 'failure'
-        run: docker logs webstore-backend-js-ci-1 > ci.log
+        run: docker logs webstore-backend-js-ci-1 &> ci.log
 
       - name: Upload ci.log if it exists
         if: steps.wait-webserver.outcome == 'failure'

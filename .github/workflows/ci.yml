@@ -114,6 +114,17 @@ jobs:
               sleep 1
           done
 
+      - name: Export webserver logs if it failed to start
+        if: steps.wait-webserver.outcome == 'failure'
+        run: docker logs webstore-backend-js-ci-1 > ci.log
+
+      - name: Upload ci.log if it exists
+        if: steps.wait-webserver.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          path: ci.log
+          name: ci.log
+
       - name: Run Playwright tests from commanderred42/webstore-playwright
         if: steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success'
         run: docker compose -f docker-compose.yml run webstore-playwright

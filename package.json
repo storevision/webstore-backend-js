@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "codegen": "kanel"
   },
+  "license": "AGPL-3.0",
   "dependencies": {
     "@types/express": "^5.0.0",
     "bcrypt": "^5.1.1",

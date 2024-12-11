@@ -107,12 +107,18 @@ jobs:
         run: docker compose -f docker-compose.yml up -d ci
 
       - name: Wait until webserver is ready
-        timeout-minutes: 1
         id: wait-webserver
         continue-on-error: true
         run: |
+          # only wait for 5 seconds. The image generation should not block the webserver as the generated images are optional
+          timeout=5000
+          start=$(date +%s%3N)
           while ! curl -s http://localhost:1337/healthz; do
               sleep 1
+              now=$(date +%s%3N)
+              if [ $((now-start)) -gt $timeout ]; then
+                  exit 1
+              fi
           done
 
       - name: Export webserver logs if it failed to start

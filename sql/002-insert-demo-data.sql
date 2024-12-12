@@ -37,7 +37,7 @@ VALUES (2, 50);
 INSERT INTO inventory (product_id, quantity)
 VALUES (3, 50);
 INSERT INTO inventory (product_id, quantity)
-VALUES (4, 50);
+VALUES (4, 0);
 INSERT INTO inventory (product_id, quantity)
 VALUES (5, 50);
 INSERT INTO inventory (product_id, quantity)

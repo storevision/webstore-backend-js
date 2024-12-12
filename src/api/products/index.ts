@@ -1,19 +1,20 @@
 import type { ExpressResponse } from 'api';
-import type { SearchedProducts } from 'database/products';
-import { listProducts, searchProducts } from 'database/products';
+import { getProduct, listProducts, searchProducts } from 'database/products';
 import express from 'express';
-import type Products from 'schemas/public/Products';
 
 const productsRouter = express.Router();
 
-productsRouter.get('/list', async (_req, res: ExpressResponse<Products[]>) => {
-    const products = await listProducts();
-    res.json({ success: true, data: products });
-});
+productsRouter.get(
+    '/list',
+    async (_req, res: ExpressResponse<'/products/list', 'get'>) => {
+        const products = await listProducts();
+        res.json({ success: true, data: products });
+    },
+);
 
 productsRouter.get(
     '/search',
-    async (req, res: ExpressResponse<SearchedProducts[]>) => {
+    async (req, res: ExpressResponse<'/products/search', 'get'>) => {
         const searchQuery = req.query.query;
 
         if (!searchQuery) {
@@ -24,36 +25,52 @@ productsRouter.get(
             return;
         }
 
-        const products = await searchProducts(searchQuery.toString());
+        const dbProducts = await listProducts();
+
+        const products = await searchProducts(
+            searchQuery.toString(),
+            dbProducts,
+        );
 
         res.json({ success: true, data: products });
     },
 );
 
-productsRouter.get('/get', async (req, res: ExpressResponse<Products>) => {
-    const { id } = req.query;
+productsRouter.get(
+    '/get',
+    async (req, res: ExpressResponse<'/products/get', 'get'>) => {
+        const { id } = req.query;
 
-    if (!id) {
-        res.status(400).json({
-            success: false,
-            error: 'No ID provided',
-        });
-        return;
-    }
+        if (!id) {
+            res.status(400).json({
+                success: false,
+                error: 'No ID provided',
+            });
+            return;
+        }
 
-    const products = await listProducts();
+        const productId = parseInt(id as string, 10);
 
-    const product = products.find(p => p.id === parseInt(id as string, 10));
+        if (Number.isNaN(productId)) {
+            res.status(400).json({
+                success: false,
+                error: 'Invalid ID',
+            });
+            return;
+        }
 
-    if (!product) {
-        res.status(404).json({
-            success: false,
-            error: 'Product not found',
-        });
-        return;
-    }
+        const product = await getProduct(productId);
 
-    res.json({ success: true, data: product });
-});
+        if (!product) {
+            res.status(404).json({
+                success: false,
+                error: 'Product not found',
+            });
+            return;
+        }
+
+        res.json({ success: true, data: product });
+    },
+);
 
 export default productsRouter;

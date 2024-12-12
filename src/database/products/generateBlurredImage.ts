@@ -9,16 +9,33 @@ export interface EncodedBlurredImage {
     height: number;
 }
 
+export interface ImageInfo {
+    blurredImage: EncodedBlurredImage;
+    originalInfo: {
+        width: number;
+        height: number;
+    };
+}
+
 export const createBlurredBase64 = async (
     imageArray: Uint8Array,
-): Promise<EncodedBlurredImage> => {
-    const image = sharp(imageArray).resize(16, 16, {
+): Promise<ImageInfo> => {
+    const original = sharp(imageArray);
+
+    const image = original.resize(16, 16, {
         fit: 'cover',
     });
 
+    const originalInfo = await original.metadata();
+
     const info = await image.metadata();
 
-    if (!info.width || !info.height) {
+    if (
+        !info.width ||
+        !info.height ||
+        !originalInfo.width ||
+        !originalInfo.height
+    ) {
         throw new Error('Failed to read image metadata');
     }
 
@@ -27,9 +44,15 @@ export const createBlurredBase64 = async (
     const base64 = buffer.toString('base64');
 
     return {
-        base64,
-        width: info.width,
-        height: info.height,
+        blurredImage: {
+            base64,
+            width: info.width,
+            height: info.height,
+        },
+        originalInfo: {
+            width: originalInfo.width,
+            height: originalInfo.height,
+        },
     };
 };
 
@@ -38,7 +61,7 @@ export const generateBlurredImage = async (): Promise<void> => {
 
     try {
         const { rows } = await client.query(
-            'SELECT id, image_url FROM products WHERE blurred_image IS NULL and image_url LIKE $1',
+            'SELECT id, image_url FROM products WHERE (blurred_image IS NULL or image_width IS NULL or image_height IS NULL) and image_url LIKE $1',
             ['/api/assets/%'],
         );
 
@@ -58,7 +81,8 @@ export const generateBlurredImage = async (): Promise<void> => {
 
             const imageBuffer = fs.readFileSync(rewriteImageUrl);
 
-            const blurredImage = await createBlurredBase64(imageBuffer);
+            const { blurredImage, originalInfo } =
+                await createBlurredBase64(imageBuffer);
 
             const end = Date.now();
 
@@ -69,11 +93,13 @@ export const generateBlurredImage = async (): Promise<void> => {
             );
 
             await client.query(
-                'UPDATE products SET blurred_image = $1, blurred_image_width = $2, blurred_image_height = $3 WHERE id = $4',
+                'UPDATE products SET blurred_image = $1, blurred_image_width = $2, blurred_image_height = $3, image_width = $4, image_height = $5 WHERE id = $6',
                 [
                     blurredImage.base64,
                     blurredImage.width,
                     blurredImage.height,
+                    originalInfo.width,
+                    originalInfo.height,
                     id,
                 ],
             );

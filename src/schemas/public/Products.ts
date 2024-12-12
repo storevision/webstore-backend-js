@@ -16,6 +16,10 @@ export default interface Products {
 
   image_url: string;
 
+  image_width: number | null;
+
+  image_height: number | null;
+
   blurred_image: string | null;
 
   blurred_image_width: number | null;
@@ -24,7 +28,7 @@ export default interface Products {
 
   price_per_unit: number;
 
-  category_id: CategoriesId | null;
+  category_id: CategoriesId;
 }
 
 /** Represents the initializer for the table public.products */
@@ -38,6 +42,10 @@ export interface ProductsInitializer {
 
   image_url: string;
 
+  image_width?: number | null;
+
+  image_height?: number | null;
+
   blurred_image?: string | null;
 
   blurred_image_width?: number | null;
@@ -46,7 +54,7 @@ export interface ProductsInitializer {
 
   price_per_unit: number;
 
-  category_id?: CategoriesId | null;
+  category_id: CategoriesId;
 }
 
 /** Represents the mutator for the table public.products */
@@ -59,6 +67,10 @@ export interface ProductsMutator {
 
   image_url?: string;
 
+  image_width?: number | null;
+
+  image_height?: number | null;
+
   blurred_image?: string | null;
 
   blurred_image_width?: number | null;
@@ -67,5 +79,5 @@ export interface ProductsMutator {
 
   price_per_unit?: number;
 
-  category_id?: CategoriesId | null;
+  category_id?: CategoriesId;
 }

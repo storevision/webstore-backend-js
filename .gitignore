@@ -132,8 +132,6 @@ dist
 # database
 pgdata/
 
-src/generated/
-
 .DS_Store
 playwright-report/
 results.json

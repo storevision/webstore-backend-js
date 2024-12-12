@@ -5,10 +5,31 @@ import morgan from 'morgan';
 import categoriesRouter from '@/api/categories';
 import productsRouter from '@/api/products';
 import usersRouter from '@/api/users';
+import type { paths } from '@/generated/schema';
 
-export interface SuccessResponse<T> {
+export type ExtractSuccessData<T> = T extends { success: true; data: infer D }
+    ? D
+    : never;
+
+export type SuccessData<
+    P extends keyof paths,
+    M extends keyof paths[P],
+> = paths[P][M] extends {
+    responses: {
+        200: {
+            content: { 'application/json': { success: true; data: infer T } };
+        };
+    };
+}
+    ? T
+    : null;
+
+export interface SuccessResponse<
+    P extends keyof paths,
+    M extends keyof paths[P],
+> {
     success: true;
-    data: T;
+    data: SuccessData<P, M>;
 }
 
 export interface ErrorResponse {
@@ -16,9 +37,14 @@ export interface ErrorResponse {
     error: string;
 }
 
-export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+export type ApiResponse<P extends keyof paths, M extends keyof paths[P]> =
+    | SuccessResponse<P, M>
+    | ErrorResponse;
 
-export type ExpressResponse<T> = express.Response<ApiResponse<T>>;
+export type ExpressResponse<
+    P extends keyof paths,
+    M extends keyof paths[P],
+> = express.Response<ApiResponse<P, M>>;
 
 const app = express();
 

@@ -31,7 +31,7 @@ app.get('/healthz', (_req, res) => {
     res.sendStatus(200);
 });
 
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);

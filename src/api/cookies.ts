@@ -23,7 +23,9 @@ export const verifyRequest = async (
     const { token } = req.cookies;
 
     if (!token) {
-        console.log('no token');
+        console.log(
+            `${req.method} ${req.url} - No token (${req.ip}, ${req.headers['user-agent']})`,
+        );
         res.status(401).json({ success: false, message: 'Unauthorized' });
         return null;
     }
@@ -57,6 +59,7 @@ export const verifyRequest = async (
 const inDays = (n: number): number => n * 24 * 60 * 60 * 1000 + Date.now();
 
 export const setCookie = (
+    req: express.Request,
     res: express.Response,
     user: Users,
     keepLoggedIn: boolean = false,
@@ -75,12 +78,20 @@ export const setCookie = (
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: req.secure,
         sameSite: 'strict',
         // if keepLoggedIn is true, set the cookie to expire in 30 days.
         // otherwise, let cookie last only for session
         expires: keepLoggedIn ? new Date(inDays(30)) : undefined,
+        // maxAge: keepLoggedIn ? inDays(30) : inDays(1),
     });
+
+    /* console.log(
+        'Set cookie:',
+        res.getHeaders()['set-cookie'],
+        req.secure,
+        user,
+    ); */
 };
 
 export const clearCookie = (res: express.Response): void => {

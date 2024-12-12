@@ -39,6 +39,25 @@ services:
       - SYS_ADMIN
     init: true
 
+  playwright-manual:
+    container_name: playwright
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./results.json:/app/results.json
+    environment:
+      API_BASE_URL: http://ci:1337
+      CI: true
+    #image: commanderred42/webstore-playwright
+    build:
+      context: ../webstore-frontend
+      dockerfile: Playwright.Dockerfile
+    networks:
+      - backend
+    ipc: host
+    cap_add:
+      - SYS_ADMIN
+    init: true
+
 networks:
   backend:
     driver: bridge

@@ -26,7 +26,9 @@ usersRouter.post('/register', async (req, res: ExpressResponse<Users>) => {
     try {
         const user = await registerUser({ displayName, email, password });
 
-        setCookie(res, user, false);
+        setCookie(req, res, user, false);
+
+        // console.log('Registered user:', user);
 
         res.json({ success: true, data: user });
     } catch (error) {
@@ -68,7 +70,7 @@ usersRouter.post('/login', async (req, res: ExpressResponse<Users>) => {
         return;
     }
 
-    setCookie(res, user, keepLoggedIn);
+    setCookie(req, res, user, keepLoggedIn);
 
     res.json({ success: true, data: user });
 });

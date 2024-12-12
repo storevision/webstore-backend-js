@@ -1,5 +1,7 @@
 import '@/env';
 
+import fs from 'fs';
+
 import app from '@/api';
 import initDatabase from '@/database';
 
@@ -10,6 +12,11 @@ export async function init(): Promise<void> {
 
     if (Number.isNaN(webPort)) {
         throw new Error(`Invalid port: ${portStr}`);
+    }
+
+    // check if assets directory exists
+    if (!fs.existsSync('./assets')) {
+        throw new Error('Assets directory not found');
     }
 
     await initDatabase();

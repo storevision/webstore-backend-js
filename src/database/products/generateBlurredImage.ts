@@ -1,7 +1,9 @@
 import fs from 'fs';
 import sharp from 'sharp';
 
+import type { AsDatabaseResponse } from '@/database';
 import getClient from '@/database/db';
+import type { ProductsId } from '@/schemas/public/Products';
 
 export interface EncodedBlurredImage {
     base64: string;
@@ -60,8 +62,18 @@ export const generateBlurredImage = async (): Promise<void> => {
     const client = await getClient();
 
     try {
-        const { rows } = await client.query(
-            'SELECT id, image_url FROM products WHERE (blurred_image IS NULL or image_width IS NULL or image_height IS NULL) and image_url LIKE $1',
+        const { rows } = await client.query<
+            AsDatabaseResponse<{ id: ProductsId; image_url: string }>
+        >(
+            `SELECT
+                 id,
+                 image_url
+            FROM products
+            WHERE (
+                blurred_image IS NULL or
+                image_width IS NULL or
+                image_height IS NULL
+            ) and image_url LIKE $1`,
             ['/api/assets/%'],
         );
 
@@ -93,7 +105,13 @@ export const generateBlurredImage = async (): Promise<void> => {
             );
 
             await client.query(
-                'UPDATE products SET blurred_image = $1, blurred_image_width = $2, blurred_image_height = $3, image_width = $4, image_height = $5 WHERE id = $6',
+                `UPDATE products SET
+                     blurred_image = $1,
+                     blurred_image_width = $2,
+                     blurred_image_height = $3,
+                     image_width = $4,
+                     image_height = $5
+                WHERE id = $6`,
                 [
                     blurredImage.base64,
                     blurredImage.width,

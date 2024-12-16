@@ -2,6 +2,9 @@ import type { ExpressResponse } from 'api';
 import { getProduct, listProducts, searchProducts } from 'database/products';
 import express from 'express';
 
+import { getReviews } from '@/database/products/reviews';
+import type { ProductsId } from '@/schemas/public/Products';
+
 const productsRouter = express.Router();
 
 productsRouter.get(
@@ -49,7 +52,7 @@ productsRouter.get(
             return;
         }
 
-        const productId = parseInt(id as string, 10);
+        const productId = parseInt(id as string, 10) as ProductsId;
 
         if (Number.isNaN(productId)) {
             res.status(400).json({
@@ -69,7 +72,9 @@ productsRouter.get(
             return;
         }
 
-        res.json({ success: true, data: product });
+        const reviews = await getReviews(productId);
+
+        res.json({ success: true, data: { product, reviews } });
     },
 );
 

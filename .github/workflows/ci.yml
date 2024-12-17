@@ -131,6 +131,7 @@ jobs:
         if: ${{ !cancelled() && steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success' }}
         with:
           report-file: results.json
+          job-summary: 'true'
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() && steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success' }}

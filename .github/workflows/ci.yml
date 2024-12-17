@@ -177,22 +177,17 @@ jobs:
             --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright-report") | .id')
 
           if [ -n "$ARTIFACT_ID" ]; then
-              # early exit if the artifact is not found
-              exit 0
-          fi
+            ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
-          echo "ARTIFACT_ID=$ARTIFACT_ID"
-
-          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
-
-          if [ -n "$ARTIFACT_URL" ]; then
-              MY_COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
-              if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
-              else
-                  COMMENT="$MY_COMMENT"
-              fi
-              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            if [ -n "$ARTIFACT_URL" ]; then
+                MY_COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
+                if [ -n "$COMMENT" ]; then
+                    COMMENT="$COMMENT\\n\\n$MY_COMMENT"
+                else
+                    COMMENT="$MY_COMMENT"
+                fi
+                echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Get artifact link for CI logs
@@ -207,22 +202,17 @@ jobs:
             --jq '.artifacts[] | select(.expired == false) | select(.name == "ci.log") | .id')
 
           if [ -n "$ARTIFACT_ID" ]; then
-              # early exit if the artifact is not found
-              exit 0
-          fi
+            ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
-          echo "ARTIFACT_ID=$ARTIFACT_ID"
-
-          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
-
-          if [ -n "$ARTIFACT_URL" ]; then
-              MY_COMMENT=":warning: The test run failed. You can download the Backend logs [here]($ARTIFACT_URL)."
-              if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
-              else
-                  COMMENT="$MY_COMMENT"
-              fi
-              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            if [ -n "$ARTIFACT_URL" ]; then
+                MY_COMMENT=":warning: The test run failed. You can download the Backend logs [here]($ARTIFACT_URL)."
+                if [ -n "$COMMENT" ]; then
+                    COMMENT="$COMMENT\\n\\n$MY_COMMENT"
+                else
+                    COMMENT="$MY_COMMENT"
+                fi
+                echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Get artifact link for Playwright logs
@@ -237,22 +227,17 @@ jobs:
             --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright.log") | .id')
 
           if [ -n "$ARTIFACT_ID" ]; then
-              # early exit if the artifact is not found
-              exit 0
-          fi
+            ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
-          echo "ARTIFACT_ID=$ARTIFACT_ID"
-
-          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
-
-          if [ -n "$ARTIFACT_URL" ]; then
-              MY_COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
-              if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
-              else
-                  COMMENT="$MY_COMMENT"
-              fi
-              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            if [ -n "$ARTIFACT_URL" ]; then
+                MY_COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
+                if [ -n "$COMMENT" ]; then
+                    COMMENT="$COMMENT\\n\\n$MY_COMMENT"
+                else
+                    COMMENT="$MY_COMMENT"
+                fi
+                echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Comment on PR if the webserver failed to start

@@ -705,8 +705,20 @@ export interface components {
             blurred_image_height: number | null;
             /** Format: int64 */
             stock: number;
+            /** Format: int64 */
+            one_star: number;
+            /** Format: int64 */
+            two_stars: number;
+            /** Format: int64 */
+            three_stars: number;
+            /** Format: int64 */
+            four_stars: number;
+            /** Format: int64 */
+            five_stars: number;
+            /** Format: int64 */
+            total_reviews: number;
             /** Format: double */
-            avg_rating: number;
+            average_rating: number;
         };
         SingleProduct: {
             product: components["schemas"]["Product"];

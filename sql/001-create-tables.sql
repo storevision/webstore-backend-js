@@ -93,6 +93,22 @@ SELECT product_id,
 FROM reviews
 GROUP BY product_id;
 
+CREATE FUNCTION refresh_product_ratings()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql AS
+$$
+BEGIN
+    REFRESH MATERIALIZED VIEW product_ratings;
+    RETURN NULL;
+END;
+$$;
+
+CREATE TRIGGER refresh_product_ratings
+    AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE
+    ON reviews
+    FOR EACH STATEMENT
+EXECUTE FUNCTION refresh_product_ratings();
+
 -- helps queries that filter by product_id
 CREATE INDEX ON reviews (product_id);
 

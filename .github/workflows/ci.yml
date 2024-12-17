@@ -173,11 +173,18 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
-          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
-            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright-report") | .archive_download_url')
+          ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright-report") | .id')
+
+          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
-              COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
+              MY_COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
+              if [ -n "$COMMENT" ]; then
+                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+              else
+                  COMMENT="$MY_COMMENT"
+              fi
               echo "COMMENT=$COMMENT" >> $GITHUB_ENV
           fi
 
@@ -189,11 +196,18 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
-          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
-            --jq '.artifacts[] | select(.expired == false) | select(.name == "ci.log") | .archive_download_url')
+          ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "ci.log") | .id')
+
+          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
-              COMMENT=":warning: The test run failed. You can download the CI logs [here]($ARTIFACT_URL)."
+              MY_COMMENT=":warning: The test run failed. You can download the Backend logs [here]($ARTIFACT_URL)."
+              if [ -n "$COMMENT" ]; then
+                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+              else
+                  COMMENT="$MY_COMMENT"
+              fi
               echo "COMMENT=$COMMENT" >> $GITHUB_ENV
           fi
 
@@ -205,11 +219,18 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
-          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
-            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright.log") | .archive_download_url')
+          ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright.log") | .id')
+
+          ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
-              COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
+              MY_COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
+              if [ -n "$COMMENT" ]; then
+                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+              else
+                  COMMENT="$MY_COMMENT"
+              fi
               echo "COMMENT=$COMMENT" >> $GITHUB_ENV
           fi
 

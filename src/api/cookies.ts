@@ -95,7 +95,7 @@ export const setCookie = (
         },
     );
 
-    /*res.cookie('token', token, {
+    res.cookie('token', token, {
         httpOnly: true,
         secure: req.secure,
         sameSite: 'strict',
@@ -103,7 +103,7 @@ export const setCookie = (
         // otherwise, let cookie last only for session
         expires: keepLoggedIn ? new Date(inDays(30)) : undefined,
         // maxAge: keepLoggedIn ? inDays(30) : inDays(1),
-    });*/
+    });
 
     /* console.log(
         'Set cookie:',

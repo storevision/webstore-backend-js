@@ -176,12 +176,17 @@ jobs:
           ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
             --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright-report") | .id')
 
+          if [ -n "$ARTIFACT_ID" ]; then
+              # early exit if the artifact is not found
+              exit 0
+          fi
+
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
               MY_COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
               if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
               else
                   COMMENT="$MY_COMMENT"
               fi
@@ -199,12 +204,17 @@ jobs:
           ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
             --jq '.artifacts[] | select(.expired == false) | select(.name == "ci.log") | .id')
 
+          if [ -n "$ARTIFACT_ID" ]; then
+              # early exit if the artifact is not found
+              exit 0
+          fi
+
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
               MY_COMMENT=":warning: The test run failed. You can download the Backend logs [here]($ARTIFACT_URL)."
               if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
               else
                   COMMENT="$MY_COMMENT"
               fi
@@ -222,12 +232,17 @@ jobs:
           ARTIFACT_ID=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
             --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright.log") | .id')
 
+          if [ -n "$ARTIFACT_ID" ]; then
+              # early exit if the artifact is not found
+              exit 0
+          fi
+
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
               MY_COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
               if [ -n "$COMMENT" ]; then
-                  COMMENT="$COMMENT\n\n$MY_COMMENT"
+                  COMMENT="$COMMENT\\n\\n$MY_COMMENT"
               else
                   COMMENT="$MY_COMMENT"
               fi

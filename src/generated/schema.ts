@@ -304,7 +304,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         /** Format: int64 */
-                        id: number;
+                        product_id: number;
                     };
                 };
             };
@@ -739,6 +739,7 @@ export interface components {
             id: number;
             email: string;
             display_name: string;
+            picture_data_url: string | null;
         };
         /** @example token=ey...; Path=/; HttpOnly; SameSite=Strict */
         AuthCookie: string;
@@ -750,6 +751,7 @@ export interface components {
             /** Format: int64 */
             user_id: number;
             user_display_name: string;
+            user_picture_data_url: string | null;
             /** Format: int64 */
             rating: number;
             comment: string | null;
@@ -765,7 +767,7 @@ export interface components {
         };
         EditCustomerReview: {
             /** Format: int64 */
-            id: number;
+            product_id: number;
             /** Format: int64 */
             rating: number;
             comment: string | null;

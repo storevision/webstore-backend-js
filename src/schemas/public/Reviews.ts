@@ -4,13 +4,8 @@
 import type { ProductsId } from './Products';
 import type { UsersId } from './Users';
 
-/** Identifier type for public.reviews */
-export type ReviewsId = number & { __brand: 'ReviewsId' };
-
 /** Represents the table public.reviews */
 export default interface Reviews {
-  id: ReviewsId;
-
   product_id: ProductsId;
 
   user_id: UsersId;
@@ -24,9 +19,6 @@ export default interface Reviews {
 
 /** Represents the initializer for the table public.reviews */
 export interface ReviewsInitializer {
-  /** Default value: nextval('reviews_id_seq'::regclass) */
-  id?: ReviewsId;
-
   product_id: ProductsId;
 
   user_id: UsersId;
@@ -41,8 +33,6 @@ export interface ReviewsInitializer {
 
 /** Represents the mutator for the table public.reviews */
 export interface ReviewsMutator {
-  id?: ReviewsId;
-
   product_id?: ProductsId;
 
   user_id?: UsersId;

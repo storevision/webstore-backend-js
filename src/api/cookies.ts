@@ -11,7 +11,7 @@ if (!JWT_SECRET) {
 }
 
 export interface TokenUsers
-    extends Pick<Users, 'id' | 'email' | 'display_name'> {
+    extends Pick<Users, 'id' | 'email' | 'display_name' | 'picture_data_url'> {
     iat: number;
     exp: number;
 }
@@ -87,6 +87,7 @@ export const setCookie = (
             id: user.id,
             email: user.email,
             display_name: user.display_name,
+            picture_data_url: user.picture_data_url,
         } as TokenUsers,
         JWT_SECRET,
         {
@@ -94,7 +95,7 @@ export const setCookie = (
         },
     );
 
-    res.cookie('token', token, {
+    /*res.cookie('token', token, {
         httpOnly: true,
         secure: req.secure,
         sameSite: 'strict',
@@ -102,7 +103,7 @@ export const setCookie = (
         // otherwise, let cookie last only for session
         expires: keepLoggedIn ? new Date(inDays(30)) : undefined,
         // maxAge: keepLoggedIn ? inDays(30) : inDays(1),
-    });
+    });*/
 
     /* console.log(
         'Set cookie:',

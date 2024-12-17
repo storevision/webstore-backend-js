@@ -1,4 +1,5 @@
 import getClient from 'database/db';
+import type { DatabaseError } from 'pg';
 
 import type { AsDatabaseResponse } from '@/database';
 import type { components } from '@/generated/schema';
@@ -6,6 +7,13 @@ import type { ProductsId } from '@/schemas/public/Products';
 import type { UsersId } from '@/schemas/public/Users';
 
 export type Review = components['schemas']['DatabaseCustomerReview'];
+
+export class ReviewAlreadyExistsError extends Error {
+    constructor() {
+        super('Review already exists');
+        this.name = 'ReviewAlreadyExistsError';
+    }
+}
 
 export const getReviews = async (
     productId: ProductsId,
@@ -18,7 +26,8 @@ export const getReviews = async (
             `
             SELECT
                 reviews.*,
-                users.display_name AS user_display_name
+                users.display_name AS user_display_name,
+                users.picture_data_url AS user_picture_data_url
             FROM reviews
             JOIN users ON reviews.user_id = users.id
             WHERE product_id = $1;
@@ -46,7 +55,7 @@ export const getReviews = async (
 
 export const addReview = async (
     productId: ProductsId,
-    userId: number,
+    userId: UsersId,
     rating: number,
     comment: string | null,
 ): Promise<boolean> => {
@@ -62,6 +71,58 @@ export const addReview = async (
         );
 
         return true;
+    } catch (error) {
+        if ((error as DatabaseError).code === '23505') {
+            // unique_violation
+            throw new ReviewAlreadyExistsError();
+        }
+
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
+export const deleteReview = async (
+    productId: ProductsId,
+    userId: UsersId,
+): Promise<boolean> => {
+    const client = await getClient();
+
+    try {
+        const { rowCount } = await client.query(
+            `
+            DELETE FROM reviews
+            WHERE product_id = $1 AND user_id = $2;
+            `,
+            [productId, userId],
+        );
+
+        return rowCount === 1;
+    } finally {
+        client.release();
+    }
+};
+
+export const updateReview = async (
+    productId: ProductsId,
+    userId: UsersId,
+    rating: number,
+    comment: string | null,
+): Promise<boolean> => {
+    const client = await getClient();
+
+    try {
+        const { rowCount } = await client.query(
+            `
+            UPDATE reviews
+            SET rating = $3, comment = $4
+            WHERE product_id = $1 AND user_id = $2;
+            `,
+            [productId, userId, rating, comment],
+        );
+
+        return rowCount === 1;
     } finally {
         client.release();
     }

@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import getClient from 'database/db';
 import type { DatabaseError } from 'pg';
+import { generateIdenticonDataUrl } from 'simple-identicon';
 
 import type { TokenUsers } from '@/api/cookies';
 import type { AsDatabaseResponse } from '@/database';
@@ -30,6 +31,8 @@ export const registerUser = async ({
     const passwordHash = await bcrypt.hash(password, 10);
 
     try {
+        await client.query('BEGIN');
+
         const { rows } = await client.query<AsDatabaseResponse<Users>>(
             `INSERT INTO users (
                display_name,
@@ -41,12 +44,32 @@ export const registerUser = async ({
             [displayName, email, passwordHash],
         );
 
+        let identicon = null;
+
+        if (rows.length === 1) {
+            identicon = generateIdenticonDataUrl(email);
+
+            await client.query(
+                `
+                UPDATE users
+                SET picture_data_url = $1
+                WHERE id = $2
+                `,
+                [identicon, rows[0].id],
+            );
+        }
+
+        await client.query('COMMIT');
+
         return {
             ...rows[0],
             password_changed_at: new Date(rows[0].password_changed_at),
+            picture_data_url: identicon,
             id: parseInt(rows[0].id as unknown as string, 10) as UsersId,
         };
     } catch (error) {
+        await client.query('ROLLBACK');
+
         if ((error as DatabaseError).code === '23505') {
             // unique_violation
             throw new UserAlreadyExistsError();

@@ -7,6 +7,7 @@ CREATE TABLE users
     id                  SERIAL PRIMARY KEY,
     email               TEXT      NOT NULL UNIQUE,
     display_name        TEXT      NOT NULL,
+    picture_data_url    TEXT,
     password_hash       TEXT      NOT NULL,
     password_changed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     -- profile_picture_data_url TEXT
@@ -71,12 +72,12 @@ CREATE INDEX ON inventory (product_id);
 
 CREATE TABLE reviews
 (
-    id         SERIAL PRIMARY KEY,
     product_id INTEGER   NOT NULL,
     user_id    INTEGER   NOT NULL,
     rating     INTEGER   NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     comment    TEXT,
+    PRIMARY KEY (product_id, user_id),
     FOREIGN KEY (product_id) REFERENCES products (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );

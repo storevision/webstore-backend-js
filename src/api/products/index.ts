@@ -2,12 +2,18 @@ import type { ExpressResponse } from 'api';
 import { getProduct, listProducts, searchProducts } from 'database/products';
 import express from 'express';
 
+import { verifyRequest } from '@/api/cookies';
+import productReviewsRouter from '@/api/products/reviews';
+import { getReviews } from '@/database/products/reviews';
+import type { ProductsId } from '@/schemas/public/Products';
+
 const productsRouter = express.Router();
 
 productsRouter.get(
     '/list',
     async (_req, res: ExpressResponse<'/products/list', 'get'>) => {
         const products = await listProducts();
+
         res.json({ success: true, data: products });
     },
 );
@@ -41,6 +47,8 @@ productsRouter.get(
     async (req, res: ExpressResponse<'/products/get', 'get'>) => {
         const { id } = req.query;
 
+        const user = await verifyRequest(req, res, false);
+
         if (!id) {
             res.status(400).json({
                 success: false,
@@ -49,7 +57,7 @@ productsRouter.get(
             return;
         }
 
-        const productId = parseInt(id as string, 10);
+        const productId = parseInt(id as string, 10) as ProductsId;
 
         if (Number.isNaN(productId)) {
             res.status(400).json({
@@ -69,8 +77,12 @@ productsRouter.get(
             return;
         }
 
-        res.json({ success: true, data: product });
+        const reviews = await getReviews(productId, user?.id);
+
+        res.json({ success: true, data: { product, reviews } });
     },
 );
+
+productsRouter.use('/review', productReviewsRouter);
 
 export default productsRouter;

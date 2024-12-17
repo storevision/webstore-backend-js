@@ -52,9 +52,10 @@ export async function getCurrentDatabaseVersion(): Promise<number> {
     const client = await getClient();
 
     try {
-        const query = 'SELECT value FROM metadata WHERE key = $1';
-
-        const { rows } = await client.query(query, ['db_version']);
+        const { rows } = await client.query(
+            'SELECT value FROM metadata WHERE key = $1',
+            ['db_version'],
+        );
 
         if (rows.length === 0) {
             return -1;

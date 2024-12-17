@@ -12,6 +12,8 @@ export default interface Users {
 
   display_name: string;
 
+  picture_data_url: string | null;
+
   password_hash: string;
 
   password_changed_at: Date;
@@ -26,6 +28,8 @@ export interface UsersInitializer {
 
   display_name: string;
 
+  picture_data_url?: string | null;
+
   password_hash: string;
 
   /** Default value: CURRENT_TIMESTAMP */
@@ -39,6 +43,8 @@ export interface UsersMutator {
   email?: string;
 
   display_name?: string;
+
+  picture_data_url?: string | null;
 
   password_hash?: string;
 

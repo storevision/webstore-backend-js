@@ -1,9 +1,12 @@
 import bcrypt from 'bcrypt';
 import getClient from 'database/db';
 import type { DatabaseError } from 'pg';
+import { generateIdenticonDataUrl } from 'simple-identicon';
 
 import type { TokenUsers } from '@/api/cookies';
+import type { AsDatabaseResponse } from '@/database';
 import type Users from '@/schemas/public/Users';
+import type { UsersId } from '@/schemas/public/Users';
 
 export interface RegisterUserArgs {
     displayName: string;
@@ -28,13 +31,45 @@ export const registerUser = async ({
     const passwordHash = await bcrypt.hash(password, 10);
 
     try {
-        const { rows } = await client.query<Users>(
-            'INSERT INTO users (display_name, email, password_hash) VALUES ($1, $2, $3) RETURNING *',
+        await client.query('BEGIN');
+
+        const { rows } = await client.query<AsDatabaseResponse<Users>>(
+            `INSERT INTO users (
+               display_name,
+               email,
+               password_hash
+            )
+            VALUES ($1, $2, $3)
+            RETURNING *`,
             [displayName, email, passwordHash],
         );
 
-        return rows[0];
+        let identicon = null;
+
+        if (rows.length === 1) {
+            identicon = generateIdenticonDataUrl(email);
+
+            await client.query(
+                `
+                UPDATE users
+                SET picture_data_url = $1
+                WHERE id = $2
+                `,
+                [identicon, rows[0].id],
+            );
+        }
+
+        await client.query('COMMIT');
+
+        return {
+            ...rows[0],
+            password_changed_at: new Date(rows[0].password_changed_at),
+            picture_data_url: identicon,
+            id: parseInt(rows[0].id as unknown as string, 10) as UsersId,
+        };
     } catch (error) {
+        await client.query('ROLLBACK');
+
         if ((error as DatabaseError).code === '23505') {
             // unique_violation
             throw new UserAlreadyExistsError();
@@ -53,7 +88,7 @@ export const verifyUser = async (
     const client = await getClient();
 
     try {
-        const { rows } = await client.query<Users>(
+        const { rows } = await client.query<AsDatabaseResponse<Users>>(
             'SELECT * FROM users WHERE email = $1',
             [email],
         );
@@ -73,7 +108,11 @@ export const verifyUser = async (
             return null;
         }
 
-        return user;
+        return {
+            ...user,
+            password_changed_at: new Date(user.password_changed_at),
+            id: parseInt(user.id as unknown as string, 10) as UsersId,
+        };
     } finally {
         client.release();
     }
@@ -83,12 +122,20 @@ export const getUserByEmail = async (email: string): Promise<Users | null> => {
     const client = await getClient();
 
     try {
-        const { rows } = await client.query<Users>(
+        const { rows } = await client.query<AsDatabaseResponse<Users>>(
             'SELECT * FROM users WHERE email = $1',
             [email],
         );
 
-        return rows[0] || null;
+        if (rows.length === 0) {
+            return null;
+        }
+
+        return {
+            ...rows[0],
+            password_changed_at: new Date(rows[0].password_changed_at),
+            id: parseInt(rows[0].id as unknown as string, 10) as UsersId,
+        };
     } finally {
         client.release();
     }

@@ -11,14 +11,18 @@ if (!JWT_SECRET) {
 }
 
 export interface TokenUsers
-    extends Pick<Users, 'id' | 'email' | 'display_name'> {
+    extends Pick<Users, 'id' | 'email' | 'display_name' | 'picture_data_url'> {
     iat: number;
     exp: number;
 }
 
-export const verifyRequest = async (
-    req: express.Request,
-    res: express.Response,
+export const verifyRequest = async <
+    TReq extends express.Request,
+    TRes extends express.Response,
+>(
+    req: TReq,
+    res: TRes,
+    sendError: boolean = true,
 ): Promise<TokenUsers | null> => {
     const { token } = req.cookies;
 
@@ -26,7 +30,9 @@ export const verifyRequest = async (
         console.log(
             `${req.method} ${req.url} - No token (${req.ip}, ${req.headers['user-agent']})`,
         );
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+        if (sendError) {
+            res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
         return null;
     }
 
@@ -37,7 +43,12 @@ export const verifyRequest = async (
 
         if (!verified) {
             console.log('user not verified');
-            res.status(401).json({ success: false, message: 'Unauthorized' });
+            if (sendError) {
+                res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized',
+                });
+            }
             return null;
         }
 
@@ -45,12 +56,19 @@ export const verifyRequest = async (
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
             console.log('token expired');
-            res.status(401).json({ success: false, message: 'Token expired' });
+            if (sendError) {
+                res.status(401).json({
+                    success: false,
+                    message: 'Token expired',
+                });
+            }
             return null;
         }
 
         console.error('Error verifying token:', error);
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+        if (sendError) {
+            res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
     }
 
     return null;
@@ -69,6 +87,7 @@ export const setCookie = (
             id: user.id,
             email: user.email,
             display_name: user.display_name,
+            picture_data_url: user.picture_data_url,
         } as TokenUsers,
         JWT_SECRET,
         {

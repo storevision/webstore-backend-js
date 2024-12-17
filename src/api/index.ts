@@ -1,11 +1,23 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import type * as core from 'express-serve-static-core';
 import morgan from 'morgan';
+import type { PathsWithMethod } from 'openapi-typescript-helpers';
 
 import categoriesRouter from '@/api/categories';
 import productsRouter from '@/api/products';
 import usersRouter from '@/api/users';
 import type { paths } from '@/generated/schema';
+
+export type Method =
+    | 'get'
+    | 'put'
+    | 'post'
+    | 'delete'
+    | 'options'
+    | 'head'
+    | 'patch'
+    | 'trace';
 
 export type ExtractSuccessData<T> = T extends { success: true; data: infer D }
     ? D
@@ -45,6 +57,20 @@ export type ExpressResponse<
     P extends keyof paths,
     M extends keyof paths[P],
 > = express.Response<ApiResponse<P, M>>;
+
+export type RequestBody<
+    P extends PathsWithMethod<paths, M>,
+    M extends Method = 'post',
+> = paths[P][M] extends {
+    requestBody: { content: { 'application/json': object } };
+}
+    ? paths[P][M]['requestBody']['content']['application/json']
+    : never;
+
+export type ExpressRequest<
+    P extends PathsWithMethod<paths, M>,
+    M extends Method = 'post',
+> = express.Request<core.ParamsDictionary, unknown, Partial<RequestBody<P, M>>>;
 
 const app = express();
 

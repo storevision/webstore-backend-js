@@ -117,7 +117,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["SuccessResponse"] & {
-                            data: components["schemas"]["Product"];
+                            data: components["schemas"]["SingleProduct"];
                         };
                     };
                 };
@@ -143,6 +143,210 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/review/add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Add review */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CustomerReview"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SuccessResponse"];
+                    };
+                };
+                /** @description Bad request (product_id empty, rating empty,...) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Unauthorized (token missing, token expired,...) */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Product not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/review/edit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Edit review */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditCustomerReview"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SuccessResponse"];
+                    };
+                };
+                /** @description Bad request (product_id empty, rating empty,...) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Unauthorized (token missing, token expired,...) */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Review not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/review/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Delete review */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** Format: int64 */
+                        product_id: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SuccessResponse"];
+                    };
+                };
+                /** @description Bad request (id empty,...) */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Unauthorized (token missing, token expired,...) */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Review not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -501,8 +705,24 @@ export interface components {
             blurred_image_height: number | null;
             /** Format: int64 */
             stock: number;
+            /** Format: int64 */
+            one_star: number;
+            /** Format: int64 */
+            two_stars: number;
+            /** Format: int64 */
+            three_stars: number;
+            /** Format: int64 */
+            four_stars: number;
+            /** Format: int64 */
+            five_stars: number;
+            /** Format: int64 */
+            total_reviews: number;
             /** Format: double */
-            avg_rating: number;
+            average_rating: number;
+        };
+        SingleProduct: {
+            product: components["schemas"]["Product"];
+            reviews: components["schemas"]["DatabaseCustomerReview"][];
         };
         SearchedProduct: {
             product: components["schemas"]["Product"];
@@ -519,9 +739,39 @@ export interface components {
             id: number;
             email: string;
             display_name: string;
+            picture_data_url: string | null;
         };
         /** @example token=ey...; Path=/; HttpOnly; SameSite=Strict */
         AuthCookie: string;
+        DatabaseCustomerReview: {
+            /** Format: int64 */
+            id: number;
+            /** Format: int64 */
+            product_id: number;
+            /** Format: int64 */
+            user_id: number;
+            user_display_name: string;
+            user_picture_data_url: string | null;
+            /** Format: int64 */
+            rating: number;
+            comment: string | null;
+            /** Format: date-time */
+            created_at: string;
+        };
+        CustomerReview: {
+            /** Format: int64 */
+            product_id: number;
+            /** Format: int64 */
+            rating: number;
+            comment: string | null;
+        };
+        EditCustomerReview: {
+            /** Format: int64 */
+            product_id: number;
+            /** Format: int64 */
+            rating: number;
+            comment: string | null;
+        };
     };
     responses: never;
     parameters: never;

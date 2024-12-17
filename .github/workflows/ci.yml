@@ -181,6 +181,8 @@ jobs:
               exit 0
           fi
 
+          echo "ARTIFACT_ID=$ARTIFACT_ID"
+
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
@@ -209,6 +211,8 @@ jobs:
               exit 0
           fi
 
+          echo "ARTIFACT_ID=$ARTIFACT_ID"
+
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 
           if [ -n "$ARTIFACT_URL" ]; then
@@ -236,6 +240,8 @@ jobs:
               # early exit if the artifact is not found
               exit 0
           fi
+
+          echo "ARTIFACT_ID=$ARTIFACT_ID"
 
           ARTIFACT_URL="https://github.com/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts/$ARTIFACT_ID"
 

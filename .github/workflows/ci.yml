@@ -134,6 +134,7 @@ jobs:
           job-summary: 'true'
 
       - uses: actions/upload-artifact@v4
+        id: upload-playwright-report
         if: ${{ !cancelled() && steps.wait-postgres.outcome == 'success' && steps.wait-webserver.outcome == 'success' }}
         with:
           name: playwright-report
@@ -146,6 +147,7 @@ jobs:
 
       - name: Upload webserver logs if it exists
         if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        id: upload-ci-logs
         uses: actions/upload-artifact@v4
         with:
           path: ci.log
@@ -157,10 +159,66 @@ jobs:
 
       - name: Upload playwright logs if it exists
         if: steps.playwright.outcome == 'failure'
+        id: upload-playwright-logs
         uses: actions/upload-artifact@v4
         with:
           path: playwright.log
           name: playwright.log
+
+      - name: Get artifact link for Playwright report
+        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        id: get-artifact-link-playwright-report
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright-report") | .archive_download_url')
+
+          if [ -n "$ARTIFACT_URL" ]; then
+              COMMENT=":warning: The test run failed. You can download the Playwright report [here]($ARTIFACT_URL)."
+              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+          fi
+
+      - name: Get artifact link for CI logs
+        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        id: get-artifact-link-ci-logs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "ci.log") | .archive_download_url')
+
+          if [ -n "$ARTIFACT_URL" ]; then
+              COMMENT=":warning: The test run failed. You can download the CI logs [here]($ARTIFACT_URL)."
+              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+          fi
+
+      - name: Get artifact link for Playwright logs
+        if: steps.playwright.outcome == 'failure'
+        id: get-artifact-link-playwright-logs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/runs/${{ github.run_id }}/artifacts" \
+            --jq '.artifacts[] | select(.expired == false) | select(.name == "playwright.log") | .archive_download_url')
+
+          if [ -n "$ARTIFACT_URL" ]; then
+              COMMENT=":warning: The test run failed. You can download the Playwright logs [here]($ARTIFACT_URL)."
+              echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+          fi
+
+      - name: Comment on PR if the webserver failed to start
+        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.number }}
+          body: ${{ env.COMMENT }}
 
       - name: Mark as failed if the webserver failed to start
         if: steps.wait-webserver.outcome == 'failure' || steps.wait-postgres.outcome == 'failure' || steps.playwright.outcome == 'failure'

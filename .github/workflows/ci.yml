@@ -267,6 +267,7 @@ jobs:
       contents: read
       attestations: write
       id-token: write
+    if: secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

@@ -280,6 +280,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@electric-sql/pglite@^0.2.14":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@electric-sql/pglite/-/pglite-0.2.15.tgz#c9535b50f311baa317ed7ba0113e2fdc0139e045"
+  integrity sha512-Jiq31Dnk+rg8rMhcSxs4lQvHTyizNo5b269c1gCC3ldQ0sCLrNVPGzy+KnmonKy1ZArTUuXZf23/UamzFMKVaA==
+
 "@emnapi/runtime@^1.2.0":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-1.3.1.tgz#0fcaa575afc31f455fd33534c19381cfce6c6f60"
@@ -987,17 +992,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*":
-  version "22.9.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.9.1.tgz#bdf91c36e0e7ecfb7257b2d75bf1b206b308ca71"
-  integrity sha512-p8Yy/8sw1caA8CdRIQBG5tiLHmxtQKObCijiAa9Ez+d4+PRffM4054xbju0msf+cvhJpnFEeNjxmVT/0ipktrg==
-  dependencies:
-    undici-types "~6.19.8"
-
-"@types/node@^22.10.1":
-  version "22.10.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.1.tgz#41ffeee127b8975a05f8c4f83fb89bcb2987d766"
-  integrity sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==
+"@types/node@*", "@types/node@^22.10.2":
+  version "22.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.2.tgz#a485426e6d1fdafc7b0d4c7b24e2c78182ddabb9"
+  integrity sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==
   dependencies:
     undici-types "~6.20.0"
 
@@ -2273,10 +2271,10 @@ eslint-plugin-import@^2.31.0:
     string.prototype.trimend "^1.0.8"
     tsconfig-paths "^3.15.0"
 
-eslint-plugin-jest@^28.9.0:
-  version "28.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-28.9.0.tgz#19168dfaed124339cd2252c4c4d1ac3688aeb243"
-  integrity sha512-rLu1s1Wf96TgUUxSw6loVIkNtUjq1Re7A9QdCCHSohnvXEBAjuL420h0T/fMmkQlNsQP2GhQzEUpYHPfxBkvYQ==
+eslint-plugin-jest@^28.10.0:
+  version "28.10.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-28.10.0.tgz#4b35b8abb0f7cfe699bff8d9060270a2ddd770ea"
+  integrity sha512-hyMWUxkBH99HpXT3p8hc7REbEZK3D+nk8vHXGgpB+XXsi0gO4PxMSP+pjfUzb67GnV9yawV9a53eUmcde1CCZA==
   dependencies:
     "@typescript-eslint/utils" "^6.0.0 || ^7.0.0 || ^8.0.0"
 
@@ -2486,13 +2484,14 @@ express@^4.21.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
-extract-pg-schema@^5.0.0:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/extract-pg-schema/-/extract-pg-schema-5.1.3.tgz#3aa398431c5a1b22ee8d12d42d382748aba0cd41"
-  integrity sha512-Mdc2J5WK5/qFsiCuKbjF1x7Zhc6aeIlPBxkHZjn91DPgcmGnRkHRlp8B/yciSU15MgmJbqSUjCTh79qHn0eAgA==
+extract-pg-schema@^5.2.0:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/extract-pg-schema/-/extract-pg-schema-5.3.3.tgz#b8efb060c818c781bb427c6abd406335f694defe"
+  integrity sha512-OoCuSunc0ZfC9hp/KNl53bhhupbjEpk1wPcRL0y/a+qLTpmPqpi/MxiuDZHOSN5u47GkNSDOmKhMCYOpzPC6Yg==
   dependencies:
     jsonpath "^1.1.1"
     knex "3.1.0"
+    knex-pglite "^0.11.0"
     pg "8.13.1"
     pg-query-emscripten "^5.1.0"
     ramda "^0.30.0"
@@ -3686,15 +3685,15 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
-kanel@^3.10.3:
-  version "3.10.3"
-  resolved "https://registry.yarnpkg.com/kanel/-/kanel-3.10.3.tgz#0a3111f02b7437ef5f5b11897888e16b3f74b11f"
-  integrity sha512-SUXqxl/RdF8aPUVS+iSb7Ww6IAxIf2vBiKrZZOprgRvJ8TW8NqnmU+5gZ4RGuYirEiz/X3pTX1MtWMSV/WAP6w==
+kanel@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/kanel/-/kanel-3.11.0.tgz#a4e0faa0190978cb524efd69caa29b71219feed9"
+  integrity sha512-6CgdXLIWGi6+bMqhe2vlNlLB1h56r60rgZgghlR/OZfq9oqcMWzPRXYOeDE0YzTna17e1gfXEHlQZ9Q5ooAk6Q==
   dependencies:
     "@kristiandupont/recase" "^1.2.1"
     chalk "4.1.2"
     cli-progress "^3.11.2"
-    extract-pg-schema "^5.0.0"
+    extract-pg-schema "^5.2.0"
     optionator "^0.9.1"
     pg "^8.10.0"
     ramda "^0.30.0"
@@ -3717,6 +3716,14 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
+knex-pglite@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/knex-pglite/-/knex-pglite-0.11.0.tgz#0fe49a37b01ae7cd63601bd6ee14933c6b40d55e"
+  integrity sha512-Z3v+vaF8C/VMJll7J2NHqFZo31ijLfYBsHMKU8jTnjfIF0edUonAB3sbAZYmUbSeJDDGfZdJPsvcB4ZyGBERcA==
+  dependencies:
+    "@electric-sql/pglite" "^0.2.14"
+    knex "3.1.0"
 
 knex@3.1.0:
   version "3.1.0"
@@ -4511,10 +4518,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.3.3.tgz#30c54fe0be0d8d12e6ae61dbb10109ea00d53105"
-  integrity sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==
+prettier@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.4.2.tgz#a5ce1fb522a588bf2b78ca44c6e6fe5aa5a2b13f"
+  integrity sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==
 
 pretty-format@^29.7.0:
   version "29.7.0"
@@ -5338,10 +5345,10 @@ typed-array-length@^1.0.6:
     is-typed-array "^1.1.13"
     possible-typed-array-names "^1.0.0"
 
-typescript-transform-paths@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/typescript-transform-paths/-/typescript-transform-paths-3.5.2.tgz#d05de79b625ce4229b908cf7a897d15c6553a511"
-  integrity sha512-IRDVXfU7oscLwTvLabXprFrFCMUdBJbdUDtxbHFEsau9FlqrrdgS8PfwUltKDAh75vJFkQ8QdXAt/nzIWWp+fA==
+typescript-transform-paths@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/typescript-transform-paths/-/typescript-transform-paths-3.5.3.tgz#bb456773abf3382d06a372cca6dce23218a0daed"
+  integrity sha512-5y2l2iPKNHKOj08/1i+02+ljBVUhWcXQLXomiOXCmNpiTuSxIkj0dM1LUE7OOAt53+/6KidY+sFTCP781J64Eg==
   dependencies:
     minimatch "^9.0.5"
 
@@ -5364,11 +5371,6 @@ underscore@1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.12.1.tgz#7bb8cc9b3d397e201cf8553336d262544ead829e"
   integrity sha512-hEQt0+ZLDVUMhebKxL4x1BTtDY7bavVofhZ9KZ4aI26X9SRaE+Y3m83XUL1UP2jn8ynjndwCCpEHdUG+9pP1Tw==
-
-undici-types@~6.19.8:
-  version "6.19.8"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.19.8.tgz#35111c9d1437ab83a7cdc0abae2f26d88eda0a02"
-  integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
 
 undici-types@~6.20.0:
   version "6.20.0"

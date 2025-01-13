@@ -30,6 +30,19 @@ CREATE TRIGGER set_password_changed_at
 EXECUTE FUNCTION set_password_changed_at();
 
 
+CREATE TABLE user_addresses
+(
+    id         SERIAL PRIMARY KEY,
+    user_id    INTEGER NOT NULL,
+    name       TEXT    NOT NULL,
+    address    TEXT    NOT NULL,
+    city       TEXT    NOT NULL,
+    state      TEXT    NOT NULL,
+    postal_code TEXT   NOT NULL,
+    country    TEXT    NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 -- categories
 CREATE TABLE categories
 (
@@ -134,8 +147,10 @@ CREATE TABLE orders
 (
     id         SERIAL PRIMARY KEY,
     user_id    INTEGER   NOT NULL,
+    address_id INTEGER   NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (address_id) REFERENCES user_addresses (id)
 );
 
 CREATE TABLE order_items

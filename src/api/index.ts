@@ -4,7 +4,9 @@ import type * as core from 'express-serve-static-core';
 import morgan from 'morgan';
 import type { PathsWithMethod } from 'openapi-typescript-helpers';
 
+import cartRouter from '@/api/cart';
 import categoriesRouter from '@/api/categories';
+import ordersRouter from '@/api/orders';
 import productsRouter from '@/api/products';
 import usersRouter from '@/api/users';
 import type { paths } from '@/generated/schema';
@@ -88,6 +90,8 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/users', usersRouter);
+app.use('/orders', ordersRouter);
+app.use('/cart', cartRouter);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(((err, req, res, _next) => {

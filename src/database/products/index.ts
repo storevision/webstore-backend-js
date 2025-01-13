@@ -182,3 +182,28 @@ export const searchProducts = async (
         client.release();
     }
 };
+
+export const verifyProductId = async (
+    productId: number,
+): Promise<ProductsId | null> => {
+    const client = await getClient();
+
+    try {
+        const { rows } = await client.query(
+            `
+            SELECT id
+            FROM products
+            WHERE id = $1;
+            `,
+            [productId],
+        );
+
+        if (rows.length === 0) {
+            return null;
+        }
+
+        return productId as ProductsId;
+    } finally {
+        client.release();
+    }
+};

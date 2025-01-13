@@ -3,7 +3,9 @@ import express from 'express';
 
 import { clearCookie, setCookie, verifyRequest } from '@/api/cookies';
 import {
+    listAddresses,
     registerUser,
+    setAddresses,
     UserAlreadyExistsError,
     verifyUser,
 } from '@/database/users';
@@ -97,6 +99,59 @@ usersRouter.get(
         }
 
         res.json({ success: true, data: user });
+    },
+);
+
+usersRouter.get(
+    '/settings',
+    async (req, res: ExpressResponse<'/users/settings', 'get'>) => {
+        const user = await verifyRequest(req, res);
+
+        if (!user) {
+            return;
+        }
+
+        const addresses = await listAddresses(user.id);
+
+        res.json({
+            success: true,
+            data: {
+                addresses,
+            },
+        });
+    },
+);
+
+usersRouter.post(
+    '/settings',
+    async (req, res: ExpressResponse<'/users/settings', 'post'>) => {
+        const user = await verifyRequest(req, res);
+
+        if (!user) {
+            return;
+        }
+
+        const { addresses } = req.body;
+
+        if (!Array.isArray(addresses)) {
+            res.status(400).json({
+                success: false,
+                error: 'Invalid request',
+            });
+            return;
+        }
+
+        const addressResult = await setAddresses(user.id, addresses);
+
+        if (!addressResult) {
+            res.status(500).json({
+                success: false,
+                error: 'Internal server error',
+            });
+            return;
+        }
+
+        res.json({ success: true, data: null });
     },
 );
 

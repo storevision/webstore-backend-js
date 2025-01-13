@@ -5,6 +5,8 @@ import { generateIdenticonDataUrl } from 'simple-identicon';
 
 import type { TokenUsers } from '@/api/cookies';
 import type { AsDatabaseResponse } from '@/database';
+import type { UserAddressesId } from '@/schemas/public/UserAddresses';
+import type UserAddresses from '@/schemas/public/UserAddresses';
 import type Users from '@/schemas/public/Users';
 import type { UsersId } from '@/schemas/public/Users';
 
@@ -170,4 +172,82 @@ export const verifyUserByObject = async (
     }
 
     return userFromDb.id === user.id && !passwordChangedAfterTokenIssued;
+};
+
+export const listAddresses = async (
+    userId: UsersId,
+): Promise<UserAddresses[]> => {
+    const client = await getClient();
+
+    try {
+        const { rows } = await client.query<AsDatabaseResponse<UserAddresses>>(
+            'SELECT * FROM user_addresses WHERE user_id = $1',
+            [userId],
+        );
+
+        return rows.map(row => ({
+            ...row,
+            id: parseInt(row.id as unknown as string, 10) as UserAddressesId,
+            user_id: parseInt(row.user_id as unknown as string, 10) as UsersId,
+        }));
+    } finally {
+        client.release();
+    }
+};
+
+export const setAddresses = async (
+    userId: UsersId,
+    addresses: UserAddresses[],
+): Promise<UserAddresses[]> => {
+    const client = await getClient();
+
+    try {
+        await client.query('BEGIN');
+
+        await client.query('DELETE FROM user_addresses WHERE user_id = $1', [
+            userId,
+        ]);
+
+        const { rows } = await client.query<AsDatabaseResponse<UserAddresses>>(
+            `INSERT INTO user_addresses (
+               user_id,
+               name,
+               address,
+               city,
+               postal_code,
+               state,
+               country
+            ) VALUES ${addresses
+                .map(
+                    (_, i) =>
+                        `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`,
+                )
+                .join(', ')}
+            RETURNING *`,
+            [
+                userId,
+                ...addresses.flatMap(address => [
+                    address.name,
+                    address.address,
+                    address.city,
+                    address.postal_code,
+                    address.state,
+                    address.country,
+                ]),
+            ],
+        );
+
+        await client.query('COMMIT');
+
+        return rows.map(row => ({
+            ...row,
+            id: parseInt(row.id as unknown as string, 10) as UserAddressesId,
+            user_id: parseInt(row.user_id as unknown as string, 10) as UsersId,
+        }));
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
 };

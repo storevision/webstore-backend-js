@@ -478,7 +478,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["SuccessResponse"];
+                        "application/json": components["schemas"]["SuccessResponse"] & {
+                            data: components["schemas"]["CartItem"][];
+                        };
                     };
                 };
                 /** @description Bad request (product_id empty, quantity empty,...) */
@@ -545,7 +547,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["SuccessResponse"];
+                        "application/json": components["schemas"]["SuccessResponse"] & {
+                            data: components["schemas"]["CartItem"][];
+                        };
                     };
                 };
                 /** @description Bad request (product_id empty, quantity empty,...) */
@@ -607,7 +611,7 @@ export interface paths {
                     };
                     content: {
                         "application/json": components["schemas"]["SuccessResponse"] & {
-                            data: components["schemas"]["CartItem"][];
+                            data: components["schemas"]["ExtendedCartItem"][];
                         };
                     };
                 };
@@ -1246,6 +1250,9 @@ export interface components {
             product_id: number;
             /** Format: int64 */
             quantity: number;
+        };
+        ExtendedCartItem: components["schemas"]["CartItem"] & {
+            product: components["schemas"]["Product"];
         };
         OrderItem: {
             /** Format: int64 */

@@ -28,7 +28,7 @@ export const verifyRequest = async <
 
     if (!token) {
         console.log(
-            `${req.method} ${req.url} - No token (${req.ip}, ${req.headers['user-agent']})`,
+            `${req.method} ${req.originalUrl} - No token (${req.ip}, ${req.headers['user-agent']})`,
         );
         if (sendError) {
             res.status(401).json({ success: false, message: 'Unauthorized' });

@@ -5,7 +5,7 @@ import { verifyRequest } from '@/api/cookies';
 import {
     addProductToCart,
     clearCart,
-    listCart,
+    extendedListCart,
     removeProductFromCart,
 } from '@/database/cart';
 import { verifyProductId } from '@/database/products';
@@ -50,7 +50,7 @@ cartRouter.post(
         );
 
         if (isAdded) {
-            res.json({ success: true, data: null });
+            res.json({ success: true, data: isAdded });
         } else {
             res.json({ success: false, error: 'An error occurred' });
         }
@@ -95,7 +95,7 @@ cartRouter.post(
         );
 
         if (isRemoved) {
-            res.json({ success: true, data: null });
+            res.json({ success: true, data: isRemoved });
         } else {
             res.json({ success: false, error: 'An error occurred' });
         }
@@ -112,7 +112,7 @@ cartRouter.get(
         }
 
         try {
-            const cartItems = await listCart(user.id);
+            const cartItems = await extendedListCart(user.id);
 
             res.json({ success: true, data: cartItems });
         } catch (error) {

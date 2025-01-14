@@ -4,6 +4,7 @@ import express from 'express';
 import { verifyRequest } from '@/api/cookies';
 import {
     addProductToCart,
+    cartCheckout,
     clearCart,
     extendedListCart,
     removeProductFromCart,
@@ -134,7 +135,34 @@ cartRouter.post(
             return;
         }
 
-        throw new Error('Not implemented');
+        const { address } = req.body;
+
+        if (!address) {
+            res.json({ success: false, error: 'No address provided' });
+            return;
+        }
+
+        // noinspection SuspiciousTypeOfGuard
+        if (
+            typeof address !== 'object' ||
+            typeof address.address !== 'string' ||
+            typeof address.city !== 'string' ||
+            typeof address.state !== 'string' ||
+            typeof address.postal_code !== 'string' ||
+            typeof address.name !== 'string' ||
+            typeof address.country !== 'string'
+        ) {
+            res.json({ success: false, error: 'Invalid address' });
+            return;
+        }
+
+        const result = await cartCheckout(user.id, address);
+
+        if (result) {
+            res.json({ success: true, data: null });
+        } else {
+            res.json({ success: false, error: 'An error occurred' });
+        }
     },
 );
 

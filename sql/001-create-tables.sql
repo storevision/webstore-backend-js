@@ -32,14 +32,14 @@ EXECUTE FUNCTION set_password_changed_at();
 
 CREATE TABLE user_addresses
 (
-    id         SERIAL PRIMARY KEY,
-    user_id    INTEGER NOT NULL,
-    name       TEXT    NOT NULL,
-    address    TEXT    NOT NULL,
-    city       TEXT    NOT NULL,
-    state      TEXT    NOT NULL,
-    postal_code TEXT   NOT NULL,
-    country    TEXT    NOT NULL,
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
+    address     TEXT    NOT NULL,
+    city        TEXT    NOT NULL,
+    state       TEXT    NOT NULL,
+    postal_code TEXT    NOT NULL,
+    country     TEXT    NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -143,14 +143,27 @@ CREATE TABLE cart_items
 
 -- orders
 
+CREATE TABLE order_addresses
+(
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
+    address     TEXT    NOT NULL,
+    city        TEXT    NOT NULL,
+    state       TEXT    NOT NULL,
+    postal_code TEXT    NOT NULL,
+    country     TEXT    NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE orders
 (
-    id         SERIAL PRIMARY KEY,
-    user_id    INTEGER   NOT NULL,
-    address_id INTEGER   NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id               SERIAL PRIMARY KEY,
+    user_id          INTEGER   NOT NULL,
+    order_address_id INTEGER   NOT NULL,
+    created_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (address_id) REFERENCES user_addresses (id)
+    FOREIGN KEY (order_address_id) REFERENCES order_addresses (id)
 );
 
 CREATE TABLE order_items

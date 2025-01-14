@@ -1,3 +1,6 @@
+.git*
 pgdata/
 .idea/
 .github/
+docker-compose.*
+

@@ -2,8 +2,12 @@ import type { ExpressResponse, SuccessData } from 'api';
 import express from 'express';
 
 import { verifyRequest } from '@/api/cookies';
-import { getOrderById, getOrderItems, listOrders } from '@/database/orders';
-import { listAddresses } from '@/database/users';
+import {
+    getOrderById,
+    getOrderItems,
+    listOrderAddresses,
+    listOrders,
+} from '@/database/orders';
 import type { OrdersId } from '@/schemas/public/Orders';
 
 const ordersRouter = express.Router();
@@ -21,13 +25,13 @@ ordersRouter.get(
 
         const orders = await listOrders(user?.id);
 
-        const addresses = await listAddresses(user?.id);
+        const addresses = await listOrderAddresses(user?.id);
 
         try {
             const mappedOrders = await Promise.all(
                 orders.map(async order => {
                     const address = addresses.find(
-                        a => a.id === order.address_id,
+                        a => a.id === order.order_address_id,
                     );
 
                     if (!address) {
@@ -47,6 +51,7 @@ ordersRouter.get(
 
             res.json({ success: true, data: mappedOrders });
         } catch (e) {
+            console.error(e);
             res.status(500).json({
                 success: false,
                 error: 'An error occurred while fetching orders',
@@ -94,9 +99,9 @@ ordersRouter.post(
             return;
         }
 
-        const addresses = await listAddresses(user.id);
+        const addresses = await listOrderAddresses(user.id);
 
-        const address = addresses.find(a => a.id === orders.address_id);
+        const address = addresses.find(a => a.id === orders.order_address_id);
 
         if (!address) {
             res.status(404).json({

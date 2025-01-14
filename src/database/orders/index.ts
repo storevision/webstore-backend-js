@@ -3,9 +3,10 @@ import type Orders from 'schemas/public/Orders';
 import type { OrdersId } from 'schemas/public/Orders';
 
 import type { AsDatabaseResponse } from '@/database';
+import type OrderAddresses from '@/schemas/public/OrderAddresses';
+import type { OrderAddressesId } from '@/schemas/public/OrderAddresses';
 import type OrderItems from '@/schemas/public/OrderItems';
 import type { ProductsId } from '@/schemas/public/Products';
-import type { UserAddressesId } from '@/schemas/public/UserAddresses';
 import type { UsersId } from '@/schemas/public/Users';
 
 export const listOrders = async (userId: UsersId): Promise<Orders[]> => {
@@ -21,10 +22,10 @@ export const listOrders = async (userId: UsersId): Promise<Orders[]> => {
             ...row,
             id: parseInt(row.id as unknown as string, 10) as OrdersId,
             user_id: parseInt(row.user_id as unknown as string, 10) as UsersId,
-            address_id: parseInt(
-                row.address_id as unknown as string,
+            order_address_id: parseInt(
+                row.order_address_id as unknown as string,
                 10,
-            ) as UserAddressesId,
+            ) as OrderAddressesId,
             created_at: new Date(row.created_at),
         }));
     } finally {
@@ -83,12 +84,33 @@ export const getOrderById = async (
             ...row,
             id: parseInt(row.id as unknown as string, 10) as OrdersId,
             user_id: parseInt(row.user_id as unknown as string, 10) as UsersId,
-            address_id: parseInt(
-                row.address_id as unknown as string,
+            order_address_id: parseInt(
+                row.order_address_id as unknown as string,
                 10,
-            ) as UserAddressesId,
+            ) as OrderAddressesId,
             created_at: new Date(row.created_at),
         };
+    } finally {
+        client.release();
+    }
+};
+
+export const listOrderAddresses = async (
+    userId: UsersId,
+): Promise<OrderAddresses[]> => {
+    const client = await getClient();
+
+    try {
+        const { rows } = await client.query<AsDatabaseResponse<OrderAddresses>>(
+            'SELECT * FROM order_addresses WHERE user_id = $1',
+            [userId],
+        );
+
+        return rows.map(row => ({
+            ...row,
+            id: parseInt(row.id as unknown as string, 10) as OrderAddressesId,
+            user_id: parseInt(row.user_id as unknown as string, 10) as UsersId,
+        }));
     } finally {
         client.release();
     }

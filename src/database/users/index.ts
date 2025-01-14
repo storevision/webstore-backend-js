@@ -208,8 +208,7 @@ export const setAddresses = async (
             userId,
         ]);
 
-        const { rows } = await client.query<AsDatabaseResponse<UserAddresses>>(
-            `INSERT INTO user_addresses (
+        const query = `INSERT INTO user_addresses (
                user_id,
                name,
                address,
@@ -220,21 +219,26 @@ export const setAddresses = async (
             ) VALUES ${addresses
                 .map(
                     (_, i) =>
-                        `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`,
+                        `($1, $${i * 6 + 2}, $${i * 6 + 3}, $${i * 6 + 4}, $${i * 6 + 5}, $${i * 6 + 6}, $${i * 6 + 7})`,
                 )
                 .join(', ')}
-            RETURNING *`,
-            [
-                userId,
-                ...addresses.flatMap(address => [
-                    address.name,
-                    address.address,
-                    address.city,
-                    address.postal_code,
-                    address.state,
-                    address.country,
-                ]),
-            ],
+            RETURNING *`;
+
+        const args = [
+            userId,
+            ...addresses.flatMap(address => [
+                address.name,
+                address.address,
+                address.city,
+                address.postal_code,
+                address.state,
+                address.country,
+            ]),
+        ];
+
+        const { rows } = await client.query<AsDatabaseResponse<UserAddresses>>(
+            query,
+            args,
         );
 
         await client.query('COMMIT');

@@ -141,6 +141,25 @@ usersRouter.post(
             return;
         }
 
+        // check that all addresses are valid
+        for (const address of addresses) {
+            if (
+                typeof address !== 'object' ||
+                typeof address.name !== 'string' ||
+                typeof address.address !== 'string' ||
+                typeof address.city !== 'string' ||
+                typeof address.state !== 'string' ||
+                typeof address.postal_code !== 'string' ||
+                typeof address.country !== 'string'
+            ) {
+                res.status(400).json({
+                    success: false,
+                    error: 'Invalid address',
+                });
+                return;
+            }
+        }
+
         const addressResult = await setAddresses(user.id, addresses);
 
         if (!addressResult) {

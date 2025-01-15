@@ -246,7 +246,7 @@ jobs:
           fi
 
       - name: Comment on PR if the webserver failed to start
-        if: steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure'
+        if: (steps.wait-webserver.outcome == 'failure' || steps.playwright.outcome == 'failure') && (github.event.number != null)
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.number }}

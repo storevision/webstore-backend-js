@@ -1,0 +1,109 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype polyline
+
+class cart_items {
+   quantity: integer
+   user_id: integer
+   product_id: integer
+}
+class categories {
+   name: text
+   id: integer
+}
+class inventory {
+   product_id: integer
+   quantity: integer
+   id: integer
+}
+class metadata {
+   value: text
+   key: text
+}
+class order_addresses {
+   user_id: integer
+   name: text
+   address: text
+   city: text
+   state: text
+   postal_code: text
+   country: text
+   id: integer
+}
+class order_items {
+   quantity: integer
+   price_per_unit: numeric(10,2)
+   order_id: integer
+   product_id: integer
+}
+class orders {
+   user_id: integer
+   order_address_id: integer
+   created_at: timestamp
+   id: integer
+}
+class product_ratings {
+   product_id: integer
+   one_star: bigint
+   two_stars: bigint
+   three_stars: bigint
+   four_stars: bigint
+   five_stars: bigint
+   total_reviews: bigint
+   average_rating: numeric
+}
+class products {
+   name: text
+   description: text
+   image_url: text
+   image_width: integer
+   image_height: integer
+   blurred_image: text
+   blurred_image_width: integer
+   blurred_image_height: integer
+   price_per_unit: numeric(10,2)
+   category_id: integer
+   id: integer
+}
+class reviews {
+   rating: integer
+   created_at: timestamp
+   comment: text
+   product_id: integer
+   user_id: integer
+}
+class user_addresses {
+   user_id: integer
+   name: text
+   address: text
+   city: text
+   state: text
+   postal_code: text
+   country: text
+   id: integer
+}
+class users {
+   email: text
+   display_name: text
+   picture_data_url: text
+   password_hash: text
+   password_changed_at: timestamp
+   id: integer
+}
+
+cart_items       -[#595959,plain]-^  products        : "product_id:id"
+cart_items       -[#595959,plain]-^  users           : "user_id:id"
+inventory        -[#595959,plain]-^  products        : "product_id:id"
+order_addresses  -[#595959,plain]-^  users           : "user_id:id"
+order_items      -[#595959,plain]-^  orders          : "order_id:id"
+order_items      -[#595959,plain]-^  products        : "product_id:id"
+orders           -[#595959,plain]-^  order_addresses : "order_address_id:id"
+orders           -[#595959,plain]-^  users           : "user_id:id"
+product_ratings  -[#595959,plain]-^  products        : "product_id:id"
+products         -[#595959,plain]-^  categories      : "category_id:id"
+reviews          -[#595959,plain]-^  products        : "product_id:id"
+reviews          -[#595959,plain]-^  users           : "user_id:id"
+user_addresses   -[#595959,plain]-^  users           : "user_id:id"
+@enduml

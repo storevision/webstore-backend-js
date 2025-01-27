@@ -784,18 +784,18 @@
     require-from-string "^2.0.2"
     uri-js-replace "^1.0.1"
 
-"@redocly/config@^0.17.0":
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/@redocly/config/-/config-0.17.1.tgz#2def04cecf440dd78c0f102f53f3444fac050768"
-  integrity sha512-CEmvaJuG7pm2ylQg53emPmtgm4nW2nxBgwXzbVEHpGas/lGnMyN8Zlkgiz6rPw0unASg6VW3wlz27SOL5XFHYQ==
+"@redocly/config@^0.20.1":
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@redocly/config/-/config-0.20.2.tgz#4ab9bd2048ecb06b5ee0925176626a71e4480e38"
+  integrity sha512-b9sP9IOV0AW6ZZGh+fgffhU9xvMRSvVodPLWzoW1GvoxhUja3ZbPOCrI54VBowPocZ+9a7pIqNt0Ge32Sh34pA==
 
-"@redocly/openapi-core@^1.27.0":
-  version "1.27.1"
-  resolved "https://registry.yarnpkg.com/@redocly/openapi-core/-/openapi-core-1.27.1.tgz#53b6b6be0ffecf696a1da5aee84fe989cdf6d764"
-  integrity sha512-zQ47/A+Drk2Y75/af69MD3Oad4H9LxkUDzcm7XBkyLNDKIWQrDKDnS5476oDq77+zciymNxgMVtxxVXlnGS8kw==
+"@redocly/openapi-core@^1.27.2":
+  version "1.27.2"
+  resolved "https://registry.yarnpkg.com/@redocly/openapi-core/-/openapi-core-1.27.2.tgz#109163901fd8a2853e805877fe234b65e3c5753a"
+  integrity sha512-qVrDc27DHpeO2NRCMeRdb4299nijKQE3BY0wrA+WUHlOLScorIi/y7JzammLk22IaTvjR9Mv9aTAdjE1aUwJnA==
   dependencies:
     "@redocly/ajv" "^8.11.2"
-    "@redocly/config" "^0.17.0"
+    "@redocly/config" "^0.20.1"
     colorette "^1.2.0"
     https-proxy-agent "^7.0.4"
     js-levenshtein "^1.1.6"
@@ -972,11 +972,12 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
-"@types/jsonwebtoken@^9.0.7":
-  version "9.0.7"
-  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.7.tgz#e49b96c2b29356ed462e9708fc73b833014727d2"
-  integrity sha512-ugo316mmTYBl2g81zDFnZ7cfxlut3o+/EQdaP7J8QN2kY6lJ22hmQYCK5EHcJHbrW+dkCGSCPgbG8JtYj6qSrg==
+"@types/jsonwebtoken@^9.0.8":
+  version "9.0.8"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.8.tgz#313490052801edfb031bb32b6bbd77cc9f230852"
+  integrity sha512-7fx54m60nLFUVYlxAB1xpe9CBWX2vSrk50Y6ogRJ1v5xxtba7qXTg5BgYDN5dq+yuQQ9HaVlHJyAAt1/mxryFg==
   dependencies:
+    "@types/ms" "*"
     "@types/node" "*"
 
 "@types/mime@^1":
@@ -991,17 +992,22 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^22.10.7":
-  version "22.10.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.7.tgz#14a1ca33fd0ebdd9d63593ed8d3fbc882a6d28d7"
-  integrity sha512-V09KvXxFiutGp6B7XkpaDXlNadZxrzajcY50EuoLIpQ6WWYCSvf19lVIazzfIzQvhUN2HjX12spLojTnhuKlGg==
+"@types/ms@*":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"
+  integrity sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==
+
+"@types/node@*", "@types/node@^22.10.10":
+  version "22.10.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.10.tgz#85fe89f8bf459dc57dfef1689bd5b52ad1af07e6"
+  integrity sha512-X47y/mPNzxviAGY5TcYPtYL8JsY3kAq2n8fMmKoRCxq/c4v4pyGNCzM2R6+M5/umG4ZfHuT+sgqDYqWc9rJ6ww==
   dependencies:
     undici-types "~6.20.0"
 
-"@types/pg@^8.11.10":
-  version "8.11.10"
-  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.11.10.tgz#b8fb2b2b759d452fe3ec182beadd382563b63291"
-  integrity sha512-LczQUW4dbOQzsH2RQ5qoeJ6qJPdrcM/DcMLoqWQkMLMsq83J5lAX3LXjdkWdpscFy67JSOWDnh7Ny/sPFykmkg==
+"@types/pg@^8.11.11":
+  version "8.11.11"
+  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.11.11.tgz#3bdce0580e521a62a62339a53d110458d9eae6df"
+  integrity sha512-kGT1qKM8wJQ5qlawUrEkXgvMSXoV213KfMGXcwfDwUIfUHXqXYXOfS1nE1LINRJVVVx5wCm70XnFlMHaIcQAfw==
   dependencies:
     "@types/node" "*"
     pg-protocol "*"
@@ -4280,12 +4286,12 @@ openapi-typescript-helpers@^0.0.15:
   resolved "https://registry.yarnpkg.com/openapi-typescript-helpers/-/openapi-typescript-helpers-0.0.15.tgz#96ffa762a5e01ef66a661b163d5f1109ed1967ed"
   integrity sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==
 
-openapi-typescript@^7.5.2:
-  version "7.5.2"
-  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-7.5.2.tgz#b7b40087aaba171af5cab83c60a1dc1255b8ed65"
-  integrity sha512-W/QXuQz0Fa3bGY6LKoqTCgrSX+xI/ST+E5RXo2WBmp3WwgXCWKDJPHv5GZmElF4yLCccnqYsakBDOJikHZYGRw==
+openapi-typescript@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/openapi-typescript/-/openapi-typescript-7.6.0.tgz#2c5b03b2a5c5ccd5813e8dd3cf78342179e3ee24"
+  integrity sha512-p/xxKcWFR7aZDOAdnqYBQ1NdNyWdine+gHKHKvjxGXmlq8JT1G9+SkY8I5csKaktLHMbDDH6ZDeWQpydwBHa+Q==
   dependencies:
-    "@redocly/openapi-core" "^1.27.0"
+    "@redocly/openapi-core" "^1.27.2"
     ansi-colors "^4.1.3"
     change-case "^5.4.4"
     parse-json "^8.1.0"

@@ -19,7 +19,7 @@
         "cookie-parser": "^1.4.7",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
-        "fuse.js": "^7.0.0",
+        "fuse.js": "^7.1.0",
         "jsonwebtoken": "^9.0.2",
         "morgan": "^1.10.0",
         "openapi-typescript-helpers": "^0.0.15",
